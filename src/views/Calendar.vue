@@ -1,59 +1,62 @@
 <template>
   <div class="calendar-container">
     <div class="calendar-header">
-      <button @click="previousMonth" class="nav-button">&lt;</button>
-      <h2 class="month-title">{{ currentMonth }}月</h2>
-      <button @click="nextMonth" class="nav-button">&gt;</button>
+      <button class="nav-button" @click="previousMonth">&lt;</button>
+      <span class="month-title">{{ currentMonth }}月</span>
+      <button class="nav-button" @click="nextMonth">&gt;</button>
     </div>
-
-    <div class="calendar-grid">
-      <!-- 日期行 -->
-      <div class="date-row">
-        <div class="name-cell"></div>
-        <div v-for="day in daysInMonth" :key="day" class="date-cell">
-          {{ day }}
-        </div>
-      </div>
-
-      <!-- 人员行 -->
-      <div v-for="person in people" :key="person" class="person-row">
-        <div class="name-cell">{{ person }}</div>
-        <div
-          v-for="day in daysInMonth"
-          :key="`${person}-${day}`"
-          class="schedule-cell"
-        >
-          <!-- 这里可以添加日程内容 -->
-        </div>
-      </div>
-    </div>
+    <table class="calendar-table">
+      <thead>
+        <tr>
+          <th class="name-column"></th>
+          <th v-for="day in days" :key="day" class="date-column">{{ day }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="person in people" :key="person" class="person-row">
+          <td class="name-cell">{{ person }}</td>
+          <td v-for="day in days" :key="`${person}-${day}`" class="plan-cell">
+            <el-select class="plan-select" placeholder="选择计划" size="small">
+              <el-option label="休假" value="休假" />
+              <el-option label="出差" value="出差" />
+              <el-option label="加班" value="加班" />
+              <el-option label="正常" value="正常" />
+            </el-select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, computed } from "vue";
+import { ElSelect, ElOption } from "element-plus";
+import "element-plus/dist/index.css";
 
-const currentMonth = ref(9); // 9月
+const currentMonth = ref(9);
 const people = ref(["张三", "李四", "王五"]);
+const days = computed(() => Array.from({ length: 12 }, (_, i) => i + 1));
 
-// 计算当月天数（简化版，这里固定为30天）
-const daysInMonth = computed(() => {
-  return Array.from({ length: 30 }, (_, i) => i + 1);
+// 存储计划数据
+const planData = ref({});
+
+// 初始化每个人的计划数据
+people.value.forEach((person) => {
+  if (!planData.value[person]) {
+    planData.value[person] = {};
+  }
 });
 
 const previousMonth = () => {
   if (currentMonth.value > 1) {
     currentMonth.value--;
-  } else {
-    currentMonth.value = 12;
   }
 };
 
 const nextMonth = () => {
   if (currentMonth.value < 12) {
     currentMonth.value++;
-  } else {
-    currentMonth.value = 1;
   }
 };
 </script>
@@ -67,73 +70,86 @@ const nextMonth = () => {
 
 .calendar-header {
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  align-items: center;
   gap: 20px;
+  margin-bottom: 20px;
 }
 
 .nav-button {
+  border: none;
   background: none;
-  border: 1px solid #ccc;
-  padding: 8px 12px;
+  font-size: 18px;
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.nav-button:hover {
-  background-color: #f0f0f0;
+  padding: 5px 10px;
 }
 
 .month-title {
-  margin: 0;
-  font-size: 24px;
-  font-weight: normal;
+  font-size: 18px;
+  font-weight: bold;
 }
 
-.calendar-grid {
-  border: 2px solid #333;
-  display: inline-block;
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
 }
 
-.date-row,
-.person-row {
-  display: flex;
+th,
+td {
+  border: 1px solid #ccc;
+  text-align: center;
+  height: 40px;
+}
+
+.name-column {
+  min-width: 80px;
+  background-color: #f5f5f5;
+}
+
+.date-column {
+  min-width: 60px;
+  padding: 8px;
+  background-color: #f5f5f5;
 }
 
 .name-cell {
-  width: 80px;
-  height: 40px;
-  border: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f8f8f8;
-  font-weight: 500;
-  color: red;
+  background-color: #f5f5f5;
+  font-weight: bold;
+  padding: 8px;
 }
 
-.date-cell {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f8f8f8;
-  font-weight: 500;
-  color: blue;
+.plan-cell {
+  padding: 4px;
 }
 
-.schedule-cell {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #ccc;
-  background-color: white;
+.plan-select {
+  width: 100%;
 }
 
-.schedule-cell:hover {
-  background-color: #f0f0f0;
+:deep(.el-select) {
+  width: 100%;
+}
+
+:deep(.el-select .el-input__wrapper) {
+  box-shadow: none !important;
+  padding: 0 8px;
+}
+
+:deep(.el-select .el-input__inner) {
+  height: 32px;
+  color: #606266;
+  text-align: center;
+}
+
+:deep(.el-select-dropdown__item) {
+  padding: 0 12px;
+  height: 32px;
+  line-height: 32px;
+}
+
+:deep(.el-select-dropdown__item.selected) {
+  color: #409eff;
+  font-weight: bold;
 }
 </style>
