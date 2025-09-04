@@ -6,13 +6,13 @@
       <button class="nav-button" @click="nextMonth">&gt;</button>
     </div>
     <div class="calendar-table-container">
-      <el-table :data="tableData" height="250" style="width: 100%">
+      <el-table :data="tableData" height="400" style="width: 100%">
         <el-table-column prop="name" label="Name" width="80" fixed />
 
         <el-table-column
           prop="date"
           :label="day.day"
-          width="80"
+          width="180"
           v-for="day in days"
           :key="day.day"
         >
@@ -22,18 +22,28 @@
               <span class="weekday">{{ day.weekday }}</span>
             </div>
           </template>
-          <template #default>
-            <div class="content">
-              <el-select
-                class="plan-select"
-                placeholder="选择计划"
-                size="small"
-              >
-                <el-option label="休假" value="休假" />
-                <el-option label="出差" value="出差" />
-                <el-option label="加班" value="加班" />
-                <el-option label="正常" value="正常" />
-              </el-select>
+          <template #default="scope">
+            <div class="cell-content">
+              <div class="cell-rule">
+                <span class="rule-name">个人计划</span>
+                <el-select
+                  @change="ruleChange"
+                  v-model="
+                    planData[scope.row.name][
+                      `${currentYear}-${currentMonth}-${day.day}`
+                    ]
+                  "
+                  class="plan-select"
+                  placeholder="选择计划"
+                  size="small"
+                >
+                  <el-option label="休假" value="休假" />
+                  <el-option label="出差" value="出差" />
+                  <el-option label="加班" value="加班" />
+                  <el-option label="正常" value="正常" />
+                </el-select>
+              </div>
+              <div class="cell-plan">plan</div>
             </div>
           </template>
         </el-table-column>
@@ -75,17 +85,19 @@ const days = computed(() => {
 const planData = ref({});
 
 const tableData = ref([
-  { name: "张三", date: "2024-06-01" },
-  { name: "李四", date: "2024-06-02" },
-  { name: "王五", date: "2024-06-03" },
+  { name: "张三", date: "2024-06-01", rules: [] },
+  { name: "李四", date: "2024-06-02", rules: [] },
+  { name: "王五", date: "2024-06-03", rules: [] },
 ]);
 
-// 初始化每个人的计划数据
-people.value.forEach((person) => {
-  if (!planData.value[person]) {
+const resetRules = () => {
+  people.value.forEach((person) => {
     planData.value[person] = {};
-  }
-});
+  });
+};
+
+// 初始化每个人的计划数据
+resetRules();
 
 const previousMonth = () => {
   const date = dayjs(`${currentYear.value}-${currentMonth.value}-01`).subtract(
@@ -94,6 +106,7 @@ const previousMonth = () => {
   );
   currentYear.value = date.year();
   currentMonth.value = date.month() + 1;
+  resetRules();
 };
 
 const nextMonth = () => {
@@ -103,192 +116,97 @@ const nextMonth = () => {
   );
   currentYear.value = date.year();
   currentMonth.value = date.month() + 1;
+  resetRules();
+};
+
+const ruleChange = (value) => {
+  console.log("Selected plan:", planData.value);
 };
 </script>
 
-<style scoped>
+<style lang="less">
+// 变量定义
+@primary-color: #409eff;
+@border-color: #ddd;
+@text-color: #333;
+@text-light-color: #666;
+@background-color: #fff;
+
 .calendar-container {
-  position: relative;
   max-width: 1200px;
   margin: 0 auto;
   height: 80vh;
-  border: 1px solid #ddd;
+  border: 1px solid @border-color;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-}
 
-/* 固定的头部 */
-.calendar-header {
-  padding: 20px;
-  background: white;
-  border-bottom: 1px solid #ddd;
-  flex-shrink: 0;
-}
+  .calendar-header {
+    padding: 20px;
+    background: @background-color;
+    border-bottom: 1px solid @border-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
 
-/* 可滚动的表格容器 */
-.calendar-table-container {
-  flex: 1;
-  overflow: auto;
-  padding: 0 20px;
-  position: relative;
-}
+    .nav-button {
+      border: none;
+      background: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 5px 10px;
+    }
 
-/* 表格样式 */
-.calendar-table {
-  width: 100%;
-  min-width: max-content;
-}
+    .month-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
 
-.calendar-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 20px;
-}
+  .calendar-table-container {
+    flex: 1;
+    padding: 0 20px;
+    overflow: hidden;
 
-.nav-button {
-  border: none;
-  background: none;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 5px 10px;
-}
+    .date-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
 
-.month-title {
-  font-size: 18px;
-  font-weight: bold;
-}
+      .day-number {
+        font-size: 14px;
+        font-weight: bold;
+        color: @text-color;
+      }
 
-.calendar-table {
-  min-width: 100%;
-  border-collapse: separate; /* 改为 separate 以支持 sticky */
-  border-spacing: 0;
-  border: 1px solid #ccc;
-}
+      .weekday {
+        font-size: 12px;
+        color: @text-light-color;
+      }
+    }
 
-.calendar-container {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  position: relative; /* 为 sticky 定位提供参考 */
-}
+    .cell-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      .cell-rule {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        .rule-name {
+          font-size: 12px;
+          color: @text-color;
+          width: 80px;
+        }
+      }
+    }
 
-th,
-td {
-  border: 1px solid #ccc;
-  text-align: center;
-  height: 40px;
-  min-width: 100px;
-  white-space: nowrap;
-  background: #fff; /* 添加背景色，防止内容重叠 */
-}
-
-/* 固定表头 */
-thead th {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background: #f5f5f5;
-}
-
-/* 固定左侧列 */
-.name-column,
-.name-cell {
-  position: sticky;
-  left: 0;
-  z-index: 1;
-}
-
-/* 左上角单元格需要最高层级 */
-.name-column {
-  z-index: 3;
-}
-
-.name-column {
-  min-width: 80px;
-  background-color: #f5f5f5;
-}
-
-.date-column {
-  min-width: 60px;
-  padding: 4px;
-  background-color: #f5f5f5;
-}
-
-.date-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.day-number {
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
-}
-
-.weekday {
-  font-size: 12px;
-  color: #666;
-}
-
-.name-cell {
-  background-color: #f5f5f5;
-  font-weight: bold;
-  padding: 8px;
-}
-
-.plan-cell {
-  padding: 2px;
-  background: #fff;
-}
-
-.plan-select {
-  width: 100%;
-}
-
-:deep(.el-select) {
-  width: 100%;
-}
-
-:deep(.el-select .el-input__wrapper) {
-  background-color: #fff;
-  box-shadow: 0 0 0 1px #dcdfe6 inset !important;
-  border-radius: 4px;
-  padding: 1px 8px;
-}
-
-:deep(.el-select .el-input__wrapper.is-focus) {
-  box-shadow: 0 0 0 1px #409eff inset !important;
-}
-
-:deep(.el-select .el-input__inner) {
-  height: 28px;
-  color: #333;
-  font-size: 13px;
-  text-align: center;
-}
-
-:deep(.el-input__suffix) {
-  color: #909399;
-}
-
-:deep(.el-select-dropdown__item) {
-  padding: 0 12px;
-  height: 32px;
-  line-height: 32px;
-  color: #333;
-}
-
-:deep(.el-select-dropdown__item.selected) {
-  color: #409eff;
-  font-weight: bold;
-  background-color: #ecf5ff;
-}
-
-:deep(.el-select-dropdown__item:hover) {
-  background-color: #f5f7fa;
+    .plan-select {
+      width: 100%;
+    }
+  }
 }
 </style>
