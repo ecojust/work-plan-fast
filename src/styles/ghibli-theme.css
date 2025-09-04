@@ -1,0 +1,1463 @@
+/* Ghibli Theme for Element Plus */
+
+:root {
+  /* 吉卜力风格的颜色变量 - 更鲜艳的配色 */
+  --ghibli-primary: #2B9EB3;    /* 千与千寻的海蓝色 */
+  --ghibli-success: #4CAF50;    /* 龙猫的森林绿 */
+  --ghibli-warning: #FF9800;    /* 哈尔的移动城堡的日落橙 */
+  --ghibli-danger: #E91E63;     /* 红猪的玫瑰红 */
+  --ghibli-info: #9C27B0;       /* 魔女宅急便的魔法紫 */
+  
+  /* 文字颜色变量 - 更鲜艳的配色 */
+  --ghibli-text: #2C3E50;       /* 基础文字颜色 */
+  --ghibli-text-primary: #1A73E8;    /* 主要文字颜色 - 更鲜艳的蓝色 */
+  --ghibli-text-success: #2E7D32;    /* 成功文字颜色 - 更深的绿色 */
+  --ghibli-text-warning: #F57C00;    /* 警告文字颜色 - 更亮的橙色 */
+  --ghibli-text-danger: #C2185B;     /* 危险文字颜色 - 更深的红色 */
+  --ghibli-text-info: #7B1FA2;       /* 信息文字颜色 - 更深的紫色 */
+  
+  /* 文字阴影变量 */
+  --ghibli-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  --ghibli-text-shadow-primary: 0 2px 4px rgba(43, 158, 179, 0.3) !important;
+  --ghibli-text-shadow-success: 0 2px 4px rgba(76, 175, 80, 0.3) !important;
+  --ghibli-text-shadow-warning: 0 2px 4px rgba(255, 152, 0, 0.3) !important;
+  --ghibli-text-shadow-danger: 0 2px 4px rgba(233, 30, 99, 0.3) !important;
+  --ghibli-text-shadow-info: 0 2px 4px rgba(156, 39, 176, 0.3) !important;
+  
+  /* 吉卜力风格字体变量 */
+  --ghibli-font-family: 'Quicksand', 'Noto Sans JP', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif !important;
+  --ghibli-font-family-title: 'Comic Sans MS', 'Quicksand', 'Noto Sans JP', sans-serif !important;
+  --ghibli-font-family-number: 'Quicksand', 'Noto Sans JP', sans-serif !important;
+  
+  /* 字体大小变量 */
+  --ghibli-font-size-base: 14px !important;
+  --ghibli-font-size-small: 13px !important;
+  --ghibli-font-size-large: 16px !important;
+  --ghibli-font-size-title: 18px !important;
+  
+  /* 字体粗细变量 */
+  --ghibli-font-weight-normal: 400 !important;
+  --ghibli-font-weight-medium: 500 !important;
+  --ghibli-font-weight-bold: 600 !important;
+  
+  /* 行高变量 */
+  --ghibli-line-height-base: 1.5 !important;
+  --ghibli-line-height-tight: 1.2 !important;
+  --ghibli-line-height-relaxed: 1.8 !important;
+  
+  /* 背景色 */
+  --ghibli-bg: #F5F7FA;         /* 更柔和的背景色 */
+  
+  /* 边框颜色 */
+  --ghibli-border: #E0E6ED;     /* 更柔和的边框色 */
+
+  /* 吉卜力风格背景色 - 更鲜艳的配色 */
+  --ghibli-bg-primary: #E3F2FD;    /* 天空蓝背景 */
+  --ghibli-bg-success: #E8F5E9;    /* 森林绿背景 */
+  --ghibli-bg-warning: #FFF3E0;    /* 日落橙背景 */
+  --ghibli-bg-danger: #FCE4EC;     /* 红猪红背景 */
+  --ghibli-bg-info: #F3E5F5;       /* 魔法紫背景 */
+
+  /* 表格专用颜色 */
+  --ghibli-table-header: #E3F2FD;  /* 表头背景色 */
+  --ghibli-table-hover: #F5F9FF;   /* 行悬停背景色 */
+  --ghibli-table-border: #BBDEFB;  /* 表格边框色 */
+  --ghibli-table-text: #37474F;    /* 表格文字颜色 */
+
+  /* 甘特图专用颜色 */
+  --ghibli-gantt-bg: #FFFFFF;      /* 甘特图背景色 */
+  --ghibli-gantt-header: #E3F2FD;  /* 甘特图表头背景色 */
+  --ghibli-gantt-grid: #BBDEFB;    /* 甘特图网格线颜色 */
+  --ghibli-gantt-bar: #2B9EB3;     /* 甘特图任务条颜色 */
+  --ghibli-gantt-bar-hover: #1B7A8F; /* 甘特图任务条悬停颜色 */
+  --ghibli-gantt-text: #37474F;    /* 甘特图文字颜色 */
+  --ghibli-gantt-today: #FFE0B2;   /* 甘特图今天标记颜色 */
+
+  /* 新增吉卜力特色颜色 */
+  --ghibli-accent-1: #FFB74D;      /* 龙猫的暖橙色 */
+  --ghibli-accent-2: #81C784;      /* 魔女宅急便的嫩绿色 */
+  --ghibli-accent-3: #64B5F6;      /* 千与千寻的浅蓝色 */
+  --ghibli-accent-4: #FF8A65;      /* 红猪的珊瑚红 */
+  --ghibli-accent-5: #BA68C8;      /* 哈尔的移动城堡的梦幻紫 */
+}
+
+/* 全局背景色 */
+body {
+  background-color: var(--ghibli-bg) !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-size: var(--ghibli-font-size-base) !important;
+  line-height: var(--ghibli-line-height-base) !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* 全局字体设置 */
+body {
+  font-family: var(--ghibli-font-family) !important;
+  font-size: var(--ghibli-font-size-base) !important;
+  line-height: var(--ghibli-line-height-base) !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* 标题字体样式 */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--ghibli-font-family-title) !important;
+  font-weight: var(--ghibli-font-weight-bold) !important;
+  line-height: var(--ghibli-line-height-tight) !important;
+  color: var(--ghibli-text-primary) !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+}
+
+/* 按钮样式 */
+.el-button {
+  border-radius: 20px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.5px !important;
+  text-shadow: var(--ghibli-text-shadow) !important;
+}
+
+.el-button--primary {
+  background-color: var(--ghibli-bg-primary) !important;
+  border-color: var(--ghibli-primary) !important;
+  color: var(--ghibli-text-primary) !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+}
+
+.el-button--success {
+  background-color: var(--ghibli-bg-success) !important;
+  border-color: var(--ghibli-success) !important;
+  color: var(--ghibli-text-success) !important;
+  text-shadow: var(--ghibli-text-shadow-success) !important;
+}
+
+.el-button--warning {
+  background-color: var(--ghibli-bg-warning) !important;
+  border-color: var(--ghibli-warning) !important;
+  color: var(--ghibli-text-warning) !important;
+  text-shadow: var(--ghibli-text-shadow-warning) !important;
+}
+
+.el-button--danger {
+  background-color: var(--ghibli-bg-danger) !important;
+  border-color: var(--ghibli-danger) !important;
+  color: var(--ghibli-text-danger) !important;
+  text-shadow: var(--ghibli-text-shadow-danger) !important;
+}
+
+.el-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 输入框样式 */
+.el-input__wrapper {
+  border-radius: 20px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  background-color: var(--ghibli-bg) !important;
+}
+
+/* 输入框字体样式 */
+.el-input__inner {
+  font-family: var(--ghibli-font-family) !important;
+  font-size: var(--ghibli-font-size-base) !important;
+}
+
+/* 卡片样式 */
+.el-card {
+  border-radius: 15px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  border: none !important;
+  background-color: var(--ghibli-bg) !important;
+}
+
+/* 菜单样式 */
+.el-menu {
+  border-radius: 10px !important;
+  padding: 5px !important;
+  background-color: var(--ghibli-bg) !important;
+}
+
+.el-menu-item {
+  border-radius: 8px !important;
+  margin: 2px 0 !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.3px !important;
+}
+
+.el-menu-item:hover {
+  background-color: var(--ghibli-bg-primary) !important;
+}
+
+/* 表格样式 */
+.el-table {
+  border-radius: 15px !important;
+  overflow: hidden !important;
+  background-color: var(--ghibli-bg) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid var(--ghibli-table-border) !important;
+}
+
+.el-table th {
+  background: linear-gradient(135deg, var(--ghibli-table-header), var(--ghibli-accent-3)) !important;
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 600 !important;
+  padding: 12px 0 !important;
+  border-bottom: 2px solid var(--ghibli-table-border) !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+  font-family: var(--ghibli-font-family-title) !important;
+  font-weight: var(--ghibli-font-weight-bold) !important;
+  letter-spacing: 0.5px !important;
+}
+
+.el-table td {
+  padding: 12px 0 !important;
+  color: var(--ghibli-text) !important;
+  border-bottom: 1px solid var(--ghibli-table-border) !important;
+  transition: all 0.3s ease !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-size: var(--ghibli-font-size-base) !important;
+  text-shadow: var(--ghibli-text-shadow) !important;
+}
+
+.el-table tr:hover > td {
+  background: linear-gradient(135deg, var(--ghibli-table-hover), var(--ghibli-bg-primary)) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* 斑马纹样式 */
+.el-table--striped .el-table__body tr.el-table__row--striped td {
+  background: linear-gradient(135deg, var(--ghibli-bg), var(--ghibli-accent-3)) !important;
+  opacity: 0.8 !important;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped:hover td {
+  background: linear-gradient(135deg, var(--ghibli-table-hover), var(--ghibli-bg-primary)) !important;
+  opacity: 1 !important;
+}
+
+/* 选中行样式 */
+.el-table__body tr.current-row > td {
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 500 !important;
+}
+
+/* 表格内状态样式 */
+.el-table .cell {
+  position: relative !important;
+}
+
+.el-table .cell::before {
+  content: '' !important;
+  position: absolute !important;
+  left: -8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 4px !important;
+  height: 16px !important;
+  border-radius: 2px !important;
+  background: linear-gradient(to bottom, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+  opacity: 0.5 !important;
+}
+
+/* 表格内按钮样式 */
+.el-table .el-button {
+  padding: 4px 8px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  border: none !important;
+  color: var(--ghibli-text-primary) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.el-table .el-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 表格内标签样式 */
+.el-table .el-tag {
+  border-radius: 12px !important;
+  padding: 0 8px !important;
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  border: none !important;
+  color: var(--ghibli-text-primary) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.3px !important;
+  text-shadow: var(--ghibli-text-shadow) !important;
+}
+
+/* 表格内输入框样式 */
+.el-table .el-input__wrapper {
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, var(--ghibli-bg), var(--ghibli-bg-primary)) !important;
+  border: 1px solid var(--ghibli-border) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 表格内选择器样式 */
+.el-table .el-select {
+  border-radius: 12px !important;
+}
+
+.el-table .el-select .el-input__wrapper {
+  background: linear-gradient(135deg, var(--ghibli-bg), var(--ghibli-bg-primary)) !important;
+}
+
+/* 表格内状态标签样式 */
+.el-table .status-tag {
+  padding: 2px 8px !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.el-table .status-tag--success {
+  background: linear-gradient(135deg, var(--ghibli-bg-success), var(--ghibli-accent-2)) !important;
+  color: var(--ghibli-text-success) !important;
+}
+
+.el-table .status-tag--warning {
+  background: linear-gradient(135deg, var(--ghibli-bg-warning), var(--ghibli-accent-1)) !important;
+  color: var(--ghibli-text-warning) !important;
+}
+
+.el-table .status-tag--danger {
+  background: linear-gradient(135deg, var(--ghibli-bg-danger), var(--ghibli-accent-4)) !important;
+  color: var(--ghibli-text-danger) !important;
+}
+
+/* 表格内进度条样式 */
+.el-table .el-progress-bar__inner {
+  background: linear-gradient(90deg, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+  border-radius: 4px !important;
+}
+
+/* 表格内图标样式 */
+.el-table .el-icon {
+  color: var(--ghibli-text-primary) !important;
+  transition: all 0.3s ease !important;
+}
+
+.el-table .el-icon:hover {
+  color: var(--ghibli-accent-4) !important;
+  transform: scale(1.1) !important;
+}
+
+/* 标签样式 */
+.el-tag {
+  border-radius: 15px !important;
+  padding: 0 12px !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.3px !important;
+  text-shadow: var(--ghibli-text-shadow) !important;
+}
+
+.el-tag--primary {
+  background-color: var(--ghibli-bg-primary) !important;
+  border-color: var(--ghibli-primary) !important;
+  color: var(--ghibli-text-primary) !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+}
+
+.el-tag--success {
+  background-color: var(--ghibli-bg-success) !important;
+  border-color: var(--ghibli-success) !important;
+  color: var(--ghibli-text-success) !important;
+  text-shadow: var(--ghibli-text-shadow-success) !important;
+}
+
+.el-tag--warning {
+  background-color: var(--ghibli-bg-warning) !important;
+  border-color: var(--ghibli-warning) !important;
+  color: var(--ghibli-text-warning) !important;
+  text-shadow: var(--ghibli-text-shadow-warning) !important;
+}
+
+.el-tag--danger {
+  background-color: var(--ghibli-bg-danger) !important;
+  border-color: var(--ghibli-danger) !important;
+  color: var(--ghibli-text-danger) !important;
+  text-shadow: var(--ghibli-text-shadow-danger) !important;
+}
+
+/* 对话框样式 */
+.el-dialog {
+  border-radius: 15px !important;
+  overflow: hidden !important;
+  background-color: var(--ghibli-bg) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid var(--ghibli-border) !important;
+}
+
+.el-dialog__header {
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  padding: 20px !important;
+  margin: 0 !important;
+  border-bottom: none !important;
+  position: relative !important;
+  border-radius: 15px 15px 0 0 !important;
+}
+
+.el-dialog__header::before {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--ghibli-primary) 50%, 
+    transparent 100%
+  ) !important;
+  opacity: 0.3 !important;
+}
+
+.el-dialog__header::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--ghibli-accent-3) 50%, 
+    transparent 100%
+  ) !important;
+  opacity: 0.2 !important;
+}
+
+.el-dialog__title {
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 600 !important;
+  font-size: 1.2em !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+  position: relative !important;
+  padding-left: 12px !important;
+  font-family: var(--ghibli-font-family-title) !important;
+  font-size: var(--ghibli-font-size-title) !important;
+  font-weight: var(--ghibli-font-weight-bold) !important;
+  letter-spacing: 0.5px !important;
+}
+
+.el-dialog__title::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 4px !important;
+  height: 16px !important;
+  background: linear-gradient(to bottom, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+  border-radius: 2px !important;
+}
+
+.el-dialog__headerbtn {
+  top: 20px !important;
+  right: 20px !important;
+}
+
+.el-dialog__headerbtn .el-dialog__close {
+  color: var(--ghibli-text-primary) !important;
+  font-size: 18px !important;
+  transition: all 0.3s ease !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  border-radius: 50% !important;
+  padding: 4px !important;
+}
+
+.el-dialog__headerbtn:hover .el-dialog__close {
+  transform: rotate(90deg) !important;
+  color: var(--ghibli-accent-4) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.el-dialog__body {
+  padding: 24px !important;
+  background-color: var(--ghibli-bg) !important;
+  position: relative !important;
+}
+
+.el-dialog__body::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, 
+    var(--ghibli-accent-1), 
+    var(--ghibli-accent-2), 
+    var(--ghibli-accent-3)
+  ) !important;
+  opacity: 0.1 !important;
+}
+
+.el-dialog__footer {
+  padding: 16px 24px !important;
+  border-top: 1px solid var(--ghibli-border) !important;
+  background-color: var(--ghibli-bg) !important;
+}
+
+/* 对话框内按钮样式 */
+.el-dialog__footer .el-button {
+  border-radius: 20px !important;
+  padding: 8px 20px !important;
+  transition: all 0.3s ease !important;
+}
+
+.el-dialog__footer .el-button--primary {
+  background: linear-gradient(135deg, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(43, 158, 179, 0.3) !important;
+}
+
+.el-dialog__footer .el-button--primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(43, 158, 179, 0.4) !important;
+}
+
+.el-dialog__footer .el-button--default {
+  background-color: var(--ghibli-bg) !important;
+  border-color: var(--ghibli-border) !important;
+  color: var(--ghibli-text) !important;
+}
+
+.el-dialog__footer .el-button--default:hover {
+  border-color: var(--ghibli-primary) !important;
+  color: var(--ghibli-text-primary) !important;
+}
+
+/* 对话框内表单样式 */
+.el-dialog .el-form-item__label {
+  color: var(--ghibli-text) !important;
+  font-weight: 500 !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.3px !important;
+}
+
+.el-dialog .el-input__wrapper {
+  border-radius: 20px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  background-color: var(--ghibli-bg) !important;
+  border: 1px solid var(--ghibli-border) !important;
+  transition: all 0.3s ease !important;
+}
+
+.el-dialog .el-input__wrapper:hover {
+  border-color: var(--ghibli-accent-3) !important;
+}
+
+.el-dialog .el-input__wrapper.is-focus {
+  border-color: var(--ghibli-primary) !important;
+  box-shadow: 0 0 0 2px rgba(43, 158, 179, 0.1) !important;
+}
+
+/* 对话框内选择器样式 */
+.el-dialog .el-select {
+  width: 100% !important;
+}
+
+.el-dialog .el-select-dropdown {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 对话框内消息提示样式 */
+.el-dialog .el-message {
+  margin: 16px 0 !important;
+  border-radius: 12px !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.3px !important;
+  text-shadow: var(--ghibli-text-shadow) !important;
+}
+
+/* 选择器样式 */
+.el-select {
+  border-radius: 20px !important;
+}
+
+.el-select-dropdown {
+  background-color: var(--ghibli-bg) !important;
+}
+
+.el-select-dropdown__item.hover, 
+.el-select-dropdown__item:hover {
+  background-color: var(--ghibli-bg-primary) !important;
+}
+
+/* 分页样式 */
+.el-pagination {
+  margin-top: 20px !important;
+}
+
+.el-pagination .el-pager li {
+  border-radius: 5px !important;
+  margin: 0 2px !important;
+  background-color: var(--ghibli-bg) !important;
+  font-family: var(--ghibli-font-family-number) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+}
+
+.el-pagination .el-pager li.active {
+  background-color: var(--ghibli-bg-primary) !important;
+  color: var(--ghibli-text-primary) !important;
+}
+
+/* 加载动画样式 */
+.el-loading-spinner {
+  animation: ghibli-spin 1s linear infinite !important;
+}
+
+@keyframes ghibli-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* 消息提示样式 */
+.el-message {
+  border-radius: 15px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.3px !important;
+  text-shadow: var(--ghibli-text-shadow) !important;
+}
+
+.el-message--success {
+  background-color: var(--ghibli-bg-success) !important;
+  border-color: var(--ghibli-success) !important;
+  color: var(--ghibli-text-success) !important;
+  text-shadow: var(--ghibli-text-shadow-success) !important;
+}
+
+.el-message--warning {
+  background-color: var(--ghibli-bg-warning) !important;
+  border-color: var(--ghibli-warning) !important;
+  color: var(--ghibli-text-warning) !important;
+  text-shadow: var(--ghibli-text-shadow-warning) !important;
+}
+
+.el-message--error {
+  background-color: var(--ghibli-bg-danger) !important;
+  border-color: var(--ghibli-danger) !important;
+  color: var(--ghibli-text-danger) !important;
+  text-shadow: var(--ghibli-text-shadow-danger) !important;
+}
+
+/* 开关样式 */
+.el-switch {
+  border-radius: 20px !important;
+}
+
+/* 滑块样式 */
+.el-slider {
+  margin: 20px 0 !important;
+}
+
+.el-slider__runway {
+  background-color: var(--ghibli-bg) !important;
+}
+
+.el-slider__bar {
+  background-color: var(--ghibli-primary) !important;
+}
+
+/* 时间选择器样式 */
+.el-time-picker {
+  border-radius: 15px !important;
+}
+
+.el-time-picker-panel {
+  background-color: var(--ghibli-bg) !important;
+}
+
+/* 日期选择器样式 */
+.el-date-picker {
+  border-radius: 15px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid var(--ghibli-border) !important;
+  overflow: hidden !important;
+}
+
+.el-date-picker-panel {
+  background: linear-gradient(135deg, var(--ghibli-bg), var(--ghibli-bg-primary)) !important;
+  border-radius: 15px !important;
+  padding: 12px !important;
+}
+
+/* 日期选择器头部样式 */
+.el-date-picker__header {
+  margin: 8px 0 !important;
+  padding: 0 8px !important;
+}
+
+.el-date-picker__header button {
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.el-date-picker__header button:hover {
+  color: var(--ghibli-accent-4) !important;
+  transform: scale(1.1) !important;
+}
+
+/* 日期选择器内容区域样式 */
+.el-date-picker__content {
+  padding: 8px !important;
+}
+
+/* 日期选择器星期样式 */
+.el-date-picker__header th {
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 600 !important;
+  padding: 8px !important;
+  font-size: 0.9em !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+}
+
+/* 日期选择器日期单元格样式 */
+.el-date-picker__content td {
+  padding: 4px !important;
+}
+
+.el-date-picker__content td.available {
+  color: var(--ghibli-text) !important;
+  transition: all 0.3s ease !important;
+}
+
+.el-date-picker__content td.available:hover {
+  color: var(--ghibli-text-primary) !important;
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  border-radius: 8px !important;
+  transform: translateY(-2px) !important;
+}
+
+.el-date-picker__content td.current:not(.disabled) {
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 600 !important;
+}
+
+.el-date-picker__content td.today {
+  color: var(--ghibli-accent-4) !important;
+  font-weight: 600 !important;
+}
+
+.el-date-picker__content td.in-range {
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  opacity: 0.3 !important;
+}
+
+.el-date-picker__content td.start-date,
+.el-date-picker__content td.end-date {
+  background: linear-gradient(135deg, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+  color: white !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 日期选择器禁用日期样式 */
+.el-date-picker__content td.disabled {
+  color: var(--ghibli-border) !important;
+  background: linear-gradient(135deg, var(--ghibli-bg), var(--ghibli-bg)) !important;
+}
+
+/* 日期选择器底部样式 */
+.el-date-picker__footer {
+  padding: 8px !important;
+  border-top: 1px solid var(--ghibli-border) !important;
+  margin-top: 8px !important;
+}
+
+.el-date-picker__footer button {
+  border-radius: 20px !important;
+  padding: 6px 16px !important;
+  transition: all 0.3s ease !important;
+}
+
+.el-date-picker__footer button.el-button--text {
+  color: var(--ghibli-text-primary) !important;
+}
+
+.el-date-picker__footer button.el-button--text:hover {
+  color: var(--ghibli-accent-4) !important;
+  transform: translateY(-2px) !important;
+}
+
+.el-date-picker__footer button.el-button--primary {
+  background: linear-gradient(135deg, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(43, 158, 179, 0.3) !important;
+}
+
+.el-date-picker__footer button.el-button--primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(43, 158, 179, 0.4) !important;
+}
+
+/* 日期选择器快捷选项样式 */
+.el-picker-panel__shortcut {
+  color: var(--ghibli-text) !important;
+  transition: all 0.3s ease !important;
+}
+
+.el-picker-panel__shortcut:hover {
+  color: var(--ghibli-text-primary) !important;
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  border-radius: 8px !important;
+  transform: translateX(4px) !important;
+}
+
+/* 日期选择器输入框样式 */
+.el-date-editor {
+  border-radius: 20px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  background: linear-gradient(135deg, var(--ghibli-bg), var(--ghibli-bg-primary)) !important;
+  border: 1px solid var(--ghibli-border) !important;
+  transition: all 0.3s ease !important;
+  height: 32px !important;
+  line-height: 32px !important;
+}
+
+.el-date-editor .el-input__wrapper {
+  height: 32px !important;
+  line-height: 32px !important;
+}
+
+/* 日期选择器图标样式 */
+.el-date-editor .el-input__prefix {
+  color: var(--ghibli-text-primary) !important;
+  transition: all 0.3s ease !important;
+}
+
+.el-date-editor:hover .el-input__prefix {
+  color: var(--ghibli-accent-4) !important;
+  transform: scale(1.1) !important;
+}
+
+/* 日期选择器占位符样式 */
+.el-date-editor .el-input__inner::placeholder {
+  color: var(--ghibli-border) !important;
+}
+
+/* 日期选择器动画效果 */
+@keyframes ghibli-date-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.el-date-picker-panel {
+  animation: ghibli-date-fade-in 0.3s ease-out !important;
+}
+
+/* 下拉菜单样式 */
+.el-dropdown-menu {
+  background-color: var(--ghibli-bg) !important;
+  border-radius: 10px !important;
+}
+
+.el-dropdown-menu__item:hover {
+  background-color: var(--ghibli-bg-primary) !important;
+}
+
+/* 表单样式 */
+.el-form-item__label {
+  color: var(--ghibli-text) !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* 单选框样式 */
+.el-radio__input.is-checked .el-radio__inner {
+  background-color: var(--ghibli-primary) !important;
+  border-color: var(--ghibli-primary) !important;
+}
+
+/* 复选框样式 */
+.el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: var(--ghibli-primary) !important;
+  border-color: var(--ghibli-primary) !important;
+}
+
+/* 进度条样式 */
+.el-progress-bar__inner {
+  background-color: var(--ghibli-primary) !important;
+}
+
+/* 树形控件样式 */
+.el-tree-node__content:hover {
+  background-color: var(--ghibli-bg-primary) !important;
+}
+
+/* 步骤条样式 */
+.el-step__head.is-process {
+  color: var(--ghibli-primary) !important;
+  border-color: var(--ghibli-primary) !important;
+}
+
+/* 标签页样式 */
+.el-tabs__item.is-active {
+  color: var(--ghibli-primary) !important;
+}
+
+.el-tabs__active-bar {
+  background-color: var(--ghibli-primary) !important;
+}
+
+/* 甘特图样式 */
+.ganttastic {
+  border-radius: 15px !important;
+  overflow: hidden !important;
+  background-color: var(--ghibli-gantt-bg) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid var(--ghibli-table-border) !important;
+}
+
+.ganttastic__header {
+  background-color: var(--ghibli-gantt-header) !important;
+  border-bottom: 2px solid var(--ghibli-table-border) !important;
+}
+
+.ganttastic__header-cell {
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 600 !important;
+  padding: 12px !important;
+  border-right: 1px solid var(--ghibli-table-border) !important;
+  font-family: var(--ghibli-font-family-title) !important;
+  font-weight: var(--ghibli-font-weight-bold) !important;
+  letter-spacing: 0.5px !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+}
+
+.ganttastic__grid {
+  border-right: 1px solid var(--ghibli-table-border) !important;
+}
+
+.ganttastic__grid-cell {
+  border-right: 1px solid var(--ghibli-gantt-grid) !important;
+  border-bottom: 1px solid var(--ghibli-gantt-grid) !important;
+}
+
+.ganttastic__row {
+  border-bottom: 1px solid var(--ghibli-table-border) !important;
+}
+
+.ganttastic__row-cell {
+  padding: 12px !important;
+  color: var(--ghibli-gantt-text) !important;
+  border-right: 1px solid var(--ghibli-table-border) !important;
+}
+
+.ganttastic__bar {
+  background-color: var(--ghibli-gantt-bar) !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ganttastic__bar:hover {
+  background-color: var(--ghibli-gantt-bar-hover) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.ganttastic__bar-label {
+  color: white !important;
+  font-weight: 500 !important;
+  text-shadow: var(--ghibli-text-shadow) !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.3px !important;
+}
+
+.ganttastic__today {
+  background-color: var(--ghibli-gantt-today) !important;
+  opacity: 0.5 !important;
+}
+
+.ganttastic__today::after {
+  background-color: var(--ghibli-primary) !important;
+}
+
+.ganttastic__handle {
+  background-color: white !important;
+  border: 2px solid var(--ghibli-gantt-bar) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ganttastic__handle:hover {
+  background-color: var(--ghibli-gantt-bar) !important;
+  transform: scale(1.1);
+}
+
+.ganttastic__handle--left {
+  border-right-color: transparent !important;
+}
+
+.ganttastic__handle--right {
+  border-left-color: transparent !important;
+}
+
+.ganttastic__resize-handle {
+  background-color: var(--ghibli-gantt-bar) !important;
+  opacity: 0.5 !important;
+}
+
+.ganttastic__resize-handle:hover {
+  opacity: 1 !important;
+}
+
+.ganttastic__tooltip {
+  background-color: white !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--ghibli-table-border) !important;
+  padding: 8px 12px !important;
+}
+
+.ganttastic__tooltip-title {
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 600 !important;
+}
+
+.ganttastic__tooltip-content {
+  color: var(--ghibli-gantt-text) !important;
+}
+
+.ganttastic__scrollbar {
+  background-color: var(--ghibli-bg) !important;
+}
+
+.ganttastic__scrollbar-thumb {
+  background-color: var(--ghibli-primary) !important;
+  border-radius: 10px !important;
+}
+
+.ganttastic__scrollbar-thumb:hover {
+  background-color: var(--ghibli-gantt-bar-hover) !important;
+}
+
+/* 日历组件样式 */
+.el-calendar {
+  border-radius: 15px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid var(--ghibli-border) !important;
+  overflow: hidden !important;
+  background: linear-gradient(135deg, var(--ghibli-bg), var(--ghibli-bg-primary)) !important;
+}
+
+/* 日历头部样式 */
+.el-calendar__header {
+  padding: 20px !important;
+  margin: 0 !important;
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  border-bottom: none !important;
+  position: relative !important;
+}
+
+.el-calendar__header::before {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--ghibli-primary) 50%, 
+    transparent 100%
+  ) !important;
+  opacity: 0.3 !important;
+}
+
+.el-calendar__title {
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 600 !important;
+  font-size: 1.2em !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+  position: relative !important;
+  padding-left: 12px !important;
+  font-family: var(--ghibli-font-family-title) !important;
+  font-size: var(--ghibli-font-size-title) !important;
+  font-weight: var(--ghibli-font-weight-bold) !important;
+  letter-spacing: 0.5px !important;
+}
+
+.el-calendar__title::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 4px !important;
+  height: 16px !important;
+  background: linear-gradient(to bottom, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+  border-radius: 2px !important;
+}
+
+/* 日历按钮样式 */
+.el-calendar__button-group {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.el-calendar__button-group button {
+  border-radius: 20px !important;
+  padding: 6px 12px !important;
+  color: var(--ghibli-primary) !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.el-calendar__button-group button:hover {
+  background: rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 日历主体样式 */
+.el-calendar__body {
+  padding: 20px !important;
+}
+
+/* 日历星期样式 */
+.el-calendar__body th {
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 600 !important;
+  padding: 12px !important;
+  font-size: 0.9em !important;
+  text-align: center !important;
+  font-family: var(--ghibli-font-family-title) !important;
+  font-weight: var(--ghibli-font-weight-bold) !important;
+  letter-spacing: 0.5px !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+}
+
+/* 日历日期单元格样式 */
+.el-calendar__body td {
+  padding: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.el-calendar__body td.is-today {
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  border-radius: 8px !important;
+  color: var(--ghibli-text-primary) !important;
+  font-weight: 600 !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+}
+
+.el-calendar__body td.is-selected {
+  background: linear-gradient(135deg, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+  border-radius: 8px !important;
+  color: white !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(43, 158, 179, 0.3) !important;
+}
+
+.el-calendar__body td:not(.is-disabled):hover {
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  border-radius: 8px !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 日历日期样式 */
+.el-calendar-day {
+  height: 100% !important;
+  padding: 8px !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+  position: relative !important;
+}
+
+.el-calendar-day::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  border-radius: 8px !important;
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  opacity: 0 !important;
+  transition: all 0.3s ease !important;
+  z-index: 0 !important;
+}
+
+.el-calendar-day:hover::before {
+  opacity: 0.1 !important;
+}
+
+/* 日历日期内容样式 */
+.el-calendar-day span {
+  position: relative !important;
+  z-index: 1 !important;
+  color: var(--ghibli-text) !important;
+  font-weight: 500 !important;
+  text-shadow: var(--ghibli-text-shadow) !important;
+}
+
+/* 日历禁用日期样式 */
+.el-calendar__body td.is-disabled {
+  color: var(--ghibli-border) !important;
+  background: linear-gradient(135deg, var(--ghibli-bg), var(--ghibli-bg)) !important;
+}
+
+/* 日历动画效果 */
+@keyframes ghibli-calendar-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.el-calendar {
+  animation: ghibli-calendar-fade-in 0.3s ease-out !important;
+}
+
+/* 日历装饰元素 */
+.el-calendar::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, 
+    var(--ghibli-accent-1), 
+    var(--ghibli-accent-2), 
+    var(--ghibli-accent-3)
+  ) !important;
+  opacity: 0.1 !important;
+}
+
+/* 日历日期标记样式 */
+.el-calendar-day.is-marked {
+  position: relative !important;
+}
+
+.el-calendar-day.is-marked::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 4px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 4px !important;
+  height: 4px !important;
+  background: var(--ghibli-primary) !important;
+  border-radius: 50% !important;
+  opacity: 0.5 !important;
+}
+
+/* 日历日期范围样式 */
+.el-calendar__body td.in-range {
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  opacity: 0.3 !important;
+}
+
+/* 日历日期范围开始和结束样式 */
+.el-calendar__body td.start-date,
+.el-calendar__body td.end-date {
+  background: linear-gradient(135deg, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+  color: white !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 数字字体样式 */
+.el-pagination .el-pager li,
+.el-input-number__decrease,
+.el-input-number__increase,
+.el-date-editor .el-input__inner {
+  font-family: var(--ghibli-font-family-number) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+}
+
+/* 链接字体样式 */
+a {
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.3px !important;
+  color: var(--ghibli-text-primary) !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+}
+
+a:hover {
+  color: var(--ghibli-accent-4) !important;
+  text-shadow: var(--ghibli-text-shadow-warning) !important;
+}
+
+/* 占位符字体样式 */
+::placeholder {
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-normal) !important;
+  letter-spacing: 0.3px !important;
+  color: var(--ghibli-text) !important;
+  text-shadow: var(--ghibli-text-shadow) !important;
+  opacity: 0.7 !important;
+}
+
+/* 单选框组样式 */
+.el-radio-group {
+  display: inline-flex !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border-radius: 20px !important;
+  box-shadow: none !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  height: 34px !important;
+  line-height: 34px !important;
+}
+
+/* 单选框按钮样式 */
+.el-radio-button__inner {
+  background: linear-gradient(135deg, var(--ghibli-bg), var(--ghibli-bg-primary)) !important;
+  border: 1px solid var(--ghibli-border) !important;
+  color: var(--ghibli-text) !important;
+  font-family: var(--ghibli-font-family) !important;
+  font-weight: var(--ghibli-font-weight-medium) !important;
+  letter-spacing: 0.3px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  padding: 0 15px !important;
+}
+
+.el-radio-button__inner::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(135deg, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+  opacity: 0 !important;
+  transition: all 0.3s ease !important;
+  z-index: 0 !important;
+}
+
+.el-radio-button__inner::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, transparent 70%) !important;
+  opacity: 0 !important;
+  transition: all 0.3s ease !important;
+  z-index: 1 !important;
+}
+
+.el-radio-button:first-child .el-radio-button__inner {
+  border-radius: 20px 0 0 20px !important;
+  border-right: none !important;
+}
+
+.el-radio-button:last-child .el-radio-button__inner {
+  border-radius: 0 20px 20px 0 !important;
+  border-left: none !important;
+}
+
+.el-radio-button:not(:first-child):not(:last-child) .el-radio-button__inner {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.el-radio-button__inner:hover {
+  color: var(--ghibli-text-primary) !important;
+  border-color: var(--ghibli-accent-3) !important;
+  box-shadow: 0 2px 8px rgba(43, 158, 179, 0.2) !important;
+}
+
+.el-radio-button__inner:hover::before {
+  opacity: 0.1 !important;
+}
+
+/* 单选框按钮激活状态样式 */
+.el-radio-button.is-active .el-radio-button__inner {
+  background: linear-gradient(135deg, var(--ghibli-bg-primary), var(--ghibli-accent-3)) !important;
+  border-color: var(--ghibli-primary) !important;
+  color: var(--ghibli-text-primary) !important;
+  box-shadow: 0 2px 8px rgba(43, 158, 179, 0.3) !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+  transform: translateY(-1px) !important;
+  position: relative !important;
+}
+
+.el-radio-button.is-active .el-radio-button__inner::before {
+  opacity: 0.2 !important;
+  background: linear-gradient(135deg, var(--ghibli-primary), var(--ghibli-accent-3)) !important;
+}
+
+.el-radio-button.is-active .el-radio-button__inner::after {
+  opacity: 0.5 !important;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0%, transparent 70%) !important;
+}
+
+.el-radio-button.is-active .el-radio-button__inner span {
+  position: relative !important;
+  z-index: 2 !important;
+  color: var(--ghibli-text-primary) !important;
+  text-shadow: var(--ghibli-text-shadow-primary) !important;
+  font-weight: var(--ghibli-font-weight-bold) !important;
+}
+
+/* 单选框按钮禁用样式 */
+.el-radio-button.is-disabled .el-radio-button__inner {
+  background: linear-gradient(135deg, var(--ghibli-bg), var(--ghibli-bg)) !important;
+  border-color: var(--ghibli-border) !important;
+  color: var(--ghibli-border) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transform: none !important;
+}
+
+.el-radio-button.is-disabled .el-radio-button__inner::before,
+.el-radio-button.is-disabled .el-radio-button__inner::after {
+  opacity: 0 !important;
+} 
