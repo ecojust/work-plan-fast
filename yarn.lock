@@ -570,6 +570,13 @@ prr@~1.0.1:
   resolved "https://registry.npmmirror.com/prr/-/prr-1.0.1.tgz"
   integrity sha512-yPw4Sng1gWghHQWj0B3ZggWUm4qVbPwPFcRG8KyxiU7J2OHFSoEHKS+EZ3fv5l1t9CyCiop6l/ZYeWbrgoQejw==
 
+randomize@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.npmmirror.com/randomize/-/randomize-0.0.4.tgz"
+  integrity sha512-FBZ1w0h+1t6JZMasmrT+hseK4gBddF0tJ0yhw69k6nytZR2aA3h6DMWuUXBlj69DZZRsrDIWcA2jgwp3A6oeog==
+  dependencies:
+    underscore "~1.4.4"
+
 rollup@^4.34.9:
   version "4.50.0"
   resolved "https://registry.npmmirror.com/rollup/-/rollup-4.50.0.tgz"
@@ -642,6 +649,11 @@ typescript@*, typescript@>=5.0.0, typescript@~5.6.2:
   version "5.6.3"
   resolved "https://registry.npmmirror.com/typescript/-/typescript-5.6.3.tgz"
   integrity sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==
+
+underscore@~1.4.4:
+  version "1.4.4"
+  resolved "https://registry.npmmirror.com/underscore/-/underscore-1.4.4.tgz"
+  integrity sha512-ZqGrAgaqqZM7LGRzNjLnw5elevWb5M8LEoDMadxIW3OWbcv72wMMgKdwOKpd5Fqxe8choLD8HN3iSj3TUh/giQ==
 
 "vite@^5.0.0 || ^6.0.0", vite@^6.0.3:
   version "6.3.5"
