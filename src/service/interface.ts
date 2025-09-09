@@ -33,6 +33,11 @@ export interface ISchedule {
   color: string;
 }
 
+export interface INolinkRule {
+  last: string;
+  now: string;
+}
+
 export interface IUser {
   name: string;
   desc: string;

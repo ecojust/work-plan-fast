@@ -165,10 +165,12 @@ import Rule from "../service/rules";
 import type { IUser } from "../service/interface";
 import type { ISchedule } from "../service/interface";
 
+import type { INolinkRule } from "../service/interface";
+
 const activeTab = ref("users");
 const users = ref<IUser[]>([]);
 const schedules = ref<ISchedule[]>([]);
-const noLinkRules = ref([]);
+const noLinkRules = ref<INolinkRule[]>([]);
 const ruleForm = ref({
   maxConsecutiveDays: 0,
   restDays: 0,
