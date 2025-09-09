@@ -24,6 +24,19 @@
         <input type="checkbox" v-model="notifications" />
         <span>启用通知</span>
       </div>
+
+      <!-- 文件操作测试 -->
+      <div class="setting-item">
+        <h3>文件操作测试</h3>
+        <textarea
+          v-model="fileContent"
+          placeholder="输入要保存的内容"
+        ></textarea>
+        <div class="file-actions">
+          <button @click="saveFile">保存到文件</button>
+          <button @click="readFile">读取文件</button>
+        </div>
+      </div>
     </div>
 
     <div class="actions">
@@ -35,14 +48,40 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { invoke } from "@tauri-apps/api/tauri";
 
 const theme = ref("light");
 const language = ref("zh");
 const notifications = ref(true);
+const fileContent = ref("");
 
 const saveSettings = () => {
   // 这里可以添加保存设置的逻辑
   alert("设置已保存");
+};
+
+const saveFile = async () => {
+  try {
+    // 保存到用户的文档目录下
+    const result = await invoke("write_file", {
+      path: "./test.txt",
+      content: fileContent.value,
+    });
+    alert("文件保存成功！");
+  } catch (error) {
+    alert(`保存失败: ${error}`);
+  }
+};
+
+const readFile = async () => {
+  try {
+    const content = await invoke("read_file", {
+      path: "./test.txt",
+    });
+    fileContent.value = content as string;
+  } catch (error) {
+    alert(`读取失败: ${error}`);
+  }
 };
 </script>
 
@@ -82,6 +121,34 @@ h1 {
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+.setting-item textarea {
+  width: 100%;
+  height: 100px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.file-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.file-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+.file-actions button:hover {
+  background-color: #45a049;
 }
 
 .actions {

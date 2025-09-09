@@ -14,7 +14,8 @@
     "i": "yarn tauri ios dev"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2",
+    "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/plugin-fs": "^2.4.2",
     "@tauri-apps/plugin-opener": "^2",
     "dayjs": "^1.11.18",
     "element-plus": "^2.11.1",
