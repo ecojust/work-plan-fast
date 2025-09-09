@@ -27,6 +27,17 @@ export interface IThemeItem {
   value: string;
 }
 
+export interface ISchedule {
+  label: string;
+  value: string;
+  color: string;
+}
+
+export interface IUser {
+  name: string;
+  desc: string;
+}
+
 export interface IResult {
   success: boolean;
   message: string;

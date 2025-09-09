@@ -162,10 +162,12 @@ import { ElMessage } from "element-plus";
 import User from "../service/users";
 import Schedule from "../service/schedules";
 import Rule from "../service/rules";
+import type { IUser } from "../service/interface";
+import type { ISchedule } from "../service/interface";
 
 const activeTab = ref("users");
-const users = ref([]);
-const schedules = ref([]);
+const users = ref<IUser[]>([]);
+const schedules = ref<ISchedule[]>([]);
 const noLinkRules = ref([]);
 const ruleForm = ref({
   maxConsecutiveDays: 0,
