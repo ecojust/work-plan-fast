@@ -11,7 +11,8 @@
     "b": "yarn tauri build",
     "d": "yarn tauri dev",
     "a": "yarn tauri android dev",
-    "i": "yarn tauri ios dev"
+    "i": "yarn tauri ios dev",
+    "logo": "cargo tauri icon ./WPF.png"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

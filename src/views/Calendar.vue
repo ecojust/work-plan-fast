@@ -2,9 +2,20 @@
   <div class="calendar-container">
     <!-- <ContributionGraph :plan-data="realPlan" :schedules="workTypes" /> -->
     <div class="calendar-header">
-      <button class="nav-button" @click="previousMonth">&lt;</button>
+      <!-- <button class="nav-button" @click="previousMonth">&lt;</button>
       <span class="month-title">{{ currentYear }}年{{ currentMonth }}月</span>
-      <button class="nav-button" @click="nextMonth">&gt;</button>
+      <button class="nav-button" @click="nextMonth">&gt;</button> -->
+
+      <div class="center">
+        <el-date-picker
+          v-model="dateRange"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始"
+          end-placeholder="结束"
+          @change="handleDateChange"
+        />
+      </div>
 
       <el-button class="start-button" circle round @click="startScheduling">
         <el-icon><CaretRight /></el-icon>
@@ -16,7 +27,7 @@
     </div>
     <div class="calendar-table-container">
       <el-table :data="tableData" border style="width: 100%">
-        <el-table-column prop="name" label="Name" width="80" fixed>
+        <el-table-column prop="name" label="Name" width="150" fixed>
           <template #header>
             <div class="date-header" style="width: 120px">Name</div>
           </template>
@@ -54,20 +65,26 @@
         <el-table-column
           prop="date"
           :label="day.day + ''"
-          width="180"
+          width="160"
           v-for="day in days"
           :key="day.day"
         >
           <template #header>
-            <div class="date-header" style="width: 180px">
+            <div
+              :class="['date-header', 'd' + day.weekdayIndex]"
+              style="width: 140px"
+            >
               <span class="day-number">{{ day.day }}</span>
               <span class="weekday">{{ day.weekday }}</span>
             </div>
           </template>
           <template #default="scope">
-            <div class="cell-content" style="width: 180px">
+            <div
+              :class="['cell-content', 'd' + day.weekdayIndex]"
+              style="width: 140px"
+            >
               <div class="cell-rule">
-                <span class="rule-name">个人计划</span>
+                <span class="rule-name">计划:</span>
                 <el-select
                   @change="ruleChange"
                   v-model="planData[scope.row.name][`${day.day}`]"
@@ -142,6 +159,7 @@ const showSettings = () => {
   showConfig.value = true;
   settingsVisible.value = true;
 };
+const dateRange = ref("");
 
 // 设置为中文
 dayjs.locale("zh-cn");
@@ -151,21 +169,6 @@ const currentMonth = ref(dayjs().month() + 1);
 
 const workTypes = ref(Schedule.getSchedules());
 const tableData = ref([]);
-
-// 计算当月的天数和对应的星期
-const days = computed(() => {
-  const daysInMonth = dayjs(
-    `${currentYear.value}-${currentMonth.value}`
-  ).daysInMonth();
-  return Array.from({ length: daysInMonth }, (_, i) => {
-    const day = i + 1;
-    const date = dayjs(`${currentYear.value}-${currentMonth.value}-${day}`);
-    return {
-      day,
-      weekday: date.format("ddd"), // 星期几的中文简写
-    };
-  });
-});
 
 // 存储计划数据
 const planData = ref({});
@@ -215,6 +218,43 @@ const renderworkType = (value) => {
 const renderworkTypeColor = (value) => {
   const type = workTypes.value.find((type) => type.value === value);
   return type ? type.color : "";
+};
+
+// 计算当月的天数和对应的星期
+// const days = computed(() => {
+//   const daysInMonth = dayjs(
+//     `${currentYear.value}-${currentMonth.value}`
+//   ).daysInMonth();
+//   return Array.from({ length: daysInMonth }, (_, i) => {
+//     const day = i + 1;
+//     const date = dayjs(`${currentYear.value}-${currentMonth.value}-${day}`);
+//     return {
+//       day,
+//       weekday: date.format("ddd"), // 星期几的中文简写
+//     };
+//   });
+// });
+
+const days = ref([]);
+
+const handleDateChange = (value) => {
+  initAll();
+  const start = dayjs(value[0]);
+  const end = dayjs(value[1]);
+
+  // 计算开始和结束日期之间的所有天数
+  const totalDays = end.diff(start, "day") + 1; // 包括结束日期
+  const newDays = Array.from({ length: totalDays }, (_, i) => {
+    const date = start.add(i, "day");
+    return {
+      day: date.date(),
+      weekday: date.format("ddd"),
+      fullDate: date.format("YYYY-MM-DD"),
+      weekdayIndex: date.day(), // 获取星期几的索引，0表示星期天，1表示星期一，依此类推
+    };
+  });
+
+  days.value = newDays;
 };
 
 let restDays = 0;
@@ -363,6 +403,11 @@ onMounted(() => {
 
     position: relative;
 
+    .center {
+      width: 400px;
+      text-align: center;
+    }
+
     .nav-button {
       border: none;
       background: none;
@@ -412,6 +457,9 @@ onMounted(() => {
         color: @text-light-color;
       }
     }
+    .date-header.d0 {
+      background: #4466ff;
+    }
 
     .cell-content {
       display: flex;
@@ -429,7 +477,7 @@ onMounted(() => {
         b {
           font-size: 12px;
           color: @text-color;
-          width: 180px;
+          width: 140px;
           border-radius: 4px;
           display: inline-block;
           text-align: center;
