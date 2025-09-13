@@ -1,0 +1,37 @@
+{
+  "id": "5021012",
+  "name": "wpf",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "排班计划",
+  "glyphs": [
+    {
+      "icon_id": "7030130",
+      "name": "export",
+      "font_class": "export1",
+      "unicode": "e6d3",
+      "unicode_decimal": 59091
+    },
+    {
+      "icon_id": "141569",
+      "name": "clear",
+      "font_class": "clear",
+      "unicode": "e6df",
+      "unicode_decimal": 59103
+    },
+    {
+      "icon_id": "980892",
+      "name": "开始",
+      "font_class": "weibiaoti518",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "9568048",
+      "name": "setting",
+      "font_class": "setting",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    }
+  ]
+}

@@ -42,8 +42,11 @@ export default class Rule {
 
   //不连续上班天数
   static async getMaxConsecutiveDays() {
-    const content = await File._readFile("./continus.txt", "8");
-    const data = content?.data || 8;
+    if (process.env.NODE_ENV === "development") {
+      return 6;
+    }
+    const content = await File._readFile("./continus.txt", "6");
+    const data = content?.data || 6;
     return data;
   }
 }

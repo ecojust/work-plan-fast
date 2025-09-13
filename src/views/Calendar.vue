@@ -6,6 +6,17 @@
       <span class="month-title">{{ currentYear }}年{{ currentMonth }}月</span>
       <button class="nav-button" @click="nextMonth">&gt;</button> -->
 
+      <div class="left-operations">
+        <el-button
+          class="start-button"
+          circle
+          round
+          @click="exportPreviewVisible = true"
+        >
+          <i class="iconfont icon-export1"></i>
+        </el-button>
+      </div>
+
       <div class="center">
         <el-date-picker
           v-model="dateRange"
@@ -17,25 +28,44 @@
         />
       </div>
 
-      <el-button class="start-button" circle round @click="startScheduling">
-        <el-icon><CaretRight /></el-icon>
-      </el-button>
+      <div class="right-operations">
+        <el-button class="start-button" circle round @click="startScheduling">
+          <i class="iconfont icon-weibiaoti518"></i>
+        </el-button>
 
-      <el-button class="setting-button" circle round @click="showSettings">
-        <el-icon><Setting /></el-icon>
-      </el-button>
+        <el-button class="start-button" circle round @click="clearResults">
+          <i class="iconfont icon-clear"></i>
+        </el-button>
+
+        <el-button class="setting-button" circle round @click="showSettings">
+          <i class="iconfont icon-setting"></i>
+        </el-button>
+      </div>
     </div>
     <div class="calendar-table-container">
-      <el-table :data="tableData" border style="width: 100%">
-        <el-table-column prop="name" label="Name" width="150" fixed>
+      <el-table
+        :data="tableData"
+        border
+        style="width: 100%"
+        :cell-class-name="cellClassName"
+        :header-cell-class-name="cellClassName"
+        id="commTable"
+      >
+        <el-table-column
+          prop="name"
+          label="姓名"
+          width="150"
+          fixed
+          align="center"
+        >
           <template #header>
-            <div class="date-header" style="width: 120px">Name</div>
+            <div class="date-header">姓名</div>
           </template>
           <template #default="scope">
-            <div class="cell-content" style="width: 120px">
+            <div class="cell-content">
               <b class="user-name">{{ scope.row.name }}</b>
 
-              <div style="text-align: center">
+              <div>
                 <div class="work-details" v-for="t in workTypes" :key="t.value">
                   <span class="work-details-label">{{ t.label }}</span>
                   <span class="work-details-value">{{
@@ -64,30 +94,25 @@
 
         <el-table-column
           prop="date"
-          :label="day.day + ''"
+          :label="day.weekdayIndex + ''"
+          :weekIndex="day.weekdayIndex"
           width="160"
           v-for="day in days"
           :key="day.day"
         >
           <template #header>
-            <div
-              :class="['date-header', 'd' + day.weekdayIndex]"
-              style="width: 140px"
-            >
+            <div :class="['date-header']">
               <span class="day-number">{{ day.day }}</span>
               <span class="weekday">{{ day.weekday }}</span>
             </div>
           </template>
           <template #default="scope">
-            <div
-              :class="['cell-content', 'd' + day.weekdayIndex]"
-              style="width: 140px"
-            >
+            <div :class="['cell-content']">
               <div class="cell-rule">
                 <span class="rule-name">计划:</span>
                 <el-select
                   @change="ruleChange"
-                  v-model="planData[scope.row.name][`${day.day}`]"
+                  v-model="planData[scope.row.name][`${day.fullDate}`]"
                   class="plan-select"
                   placeholder="选择计划"
                   size="small"
@@ -102,17 +127,23 @@
               </div>
               <div class="cell-rule">
                 <span class="rule-name">实际：</span>
-
                 <b
                   :style="{
                     background: renderworkTypeColor(
-                      realPlan[scope.row.name][`${day.day}`]
+                      realPlan[scope.row.name][`${day.fullDate}`]
                     ),
                   }"
                   >{{
-                    renderworkType(realPlan[scope.row.name][`${day.day}`])
+                    renderworkType(realPlan[scope.row.name][`${day.fullDate}`])
                   }}</b
                 >
+              </div>
+
+              <div class="cell-rule">
+                <span class="rule-name">机制 ：</span>
+                <span class="rule-type">{{
+                  realPlan[scope.row.name][`${day.fullDate}Type`]
+                }}</span>
               </div>
             </div>
           </template>
@@ -122,7 +153,6 @@
 
     <!-- 设置对话框 -->
     <el-dialog
-      v-model="settingsVisible"
       title="排班设置"
       width="60%"
       :destroy-on-close="false"
@@ -134,6 +164,58 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="closeConfig">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="导出预览" v-model="exportPreviewVisible">
+      <el-table :data="tableData" border style="width: 100%" id="previewTable">
+        <el-table-column
+          prop="name"
+          label="姓名"
+          width="150"
+          fixed
+          align="center"
+        >
+          <template #header>
+            <div class="date-header">姓名</div>
+          </template>
+          <template #default="scope">
+            <div class="cell-content">
+              <b class="user-name">{{ scope.row.name }}</b>
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          prop="date"
+          :label="day.weekdayIndex + ''"
+          :weekIndex="day.weekdayIndex"
+          width="160"
+          v-for="day in days"
+          :key="day.day"
+        >
+          <template #header>
+            <div :class="['date-header']">
+              <span class="day-number">{{ day.day }}</span>
+              <span class="weekday">{{ day.weekday }}</span>
+            </div>
+          </template>
+          <template #default="scope">
+            <div :class="['cell-content']">
+              <div class="cell-rule">
+                <b>{{
+                  renderworkType(realPlan[scope.row.name][`${day.fullDate}`])
+                }}</b>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="exportPreviewVisible = false">关闭</el-button>
+          <el-button @click="exportExcel">导出</el-button>
         </span>
       </template>
     </el-dialog>
@@ -152,7 +234,10 @@ import Rule from "../service/rules";
 import Config from "./Config.vue";
 import ContributionGraph from "../components/ContributionGraph.vue";
 
+import exportToExcel from "../service/exportToExcel";
+
 const settingsVisible = ref(false);
+const exportPreviewVisible = ref(false);
 const showConfig = ref(false);
 
 const showSettings = () => {
@@ -176,6 +261,16 @@ const realPlan = ref({});
 
 const people = computed(() => tableData.value.map((item) => item.name));
 
+const eleIdPrefix = ref("prefix"); // 循环Dmo绑定的ID前缀
+const exportExcel = async () => {
+  await exportToExcel("previewTable", "排班计划");
+  exportPreviewVisible.value = false;
+};
+
+const cellClassName = ({ row, column, rowIndex, columnIndex }) => {
+  return "d" + column.label;
+};
+
 const resetRules = () => {
   people.value.forEach((person) => {
     planData.value[person] = {};
@@ -197,12 +292,17 @@ const initAll = async () => {
   loadingInstance.close();
 };
 
+const clearResults = () => {
+  resetPlans();
+  resetRules();
+};
+
 const getCount = (person, type) => {
   let count = 0;
   days.value.forEach((day) => {
     if (
       realPlan.value[person] &&
-      realPlan.value[person][`${day.day}`] === type
+      realPlan.value[person][`${day.fullDate}`] === type
     ) {
       count++;
     }
@@ -257,82 +357,148 @@ const handleDateChange = (value) => {
   days.value = newDays;
 };
 
-let restDays = 0;
-let rule1 = [];
+let restDays = 0; //一个月休息天数
+let schedules = []; //班次计划
+let maxConsecutiveDays = 0; //不连续上班天数,上5休1
 const startScheduling = async () => {
   resetPlans();
   restDays = await Rule.getRest();
-  rule1 = await Schedule.getSchedules();
+  maxConsecutiveDays = await Rule.getMaxConsecutiveDays();
+  schedules = await Schedule.getSchedules();
   people.value.forEach((person) => {
-    days.value.forEach((day) => {
-      autoSchedule(day.day, person);
+    days.value.forEach((day, index) => {
+      autoSchedule(day.fullDate, person, index);
     });
   });
   console.log("排班完成", realPlan.value);
 };
 
-const autoSchedule = (day, person) => {
+const autoSchedule = (day, person, index) => {
   // 如果有个人计划，设置为"个人计划"
   if (planData.value[person][day]) {
     realPlan.value[person][`${day}`] = planData.value[person][day];
+    realPlan.value[person][`${day}Type`] = "预计划";
+
     console.log("有个人计划，按计划排班", person, planData.value[person][day]);
     return;
   } else {
     const radomValue = random(workTypes.value.map((type) => type.value));
     realPlan.value[person][`${day}`] = radomValue;
+    realPlan.value[person][`${day}Type`] = "随机";
 
     switch (day) {
       default:
-        var lastday = day - 1;
+        var lastday = days.value[index - 1] ? days.value[index - 1].day : 0;
         //1.互斥规则
-        for (var r in rule1) {
+        for (var r in schedules) {
           if (
+            index > 0 &&
             realPlan.value[person][`${lastday}`] == r.last &&
             radomValue == r.now
           ) {
-            autoSchedule(day, person);
+            autoSchedule(day, person, index);
             return;
           }
         }
 
         // 2.休假天数规则
-        let vacationDays = 0;
-        const vacationDaykey = "vacation";
-        const daysCount = days.value.length;
+        // let vacationDays = 0;
+        // const vacationDaykey = "vacation";
+        // const daysCount = days.value.length;
 
-        // 统计所有已经排班的休假天数（包括当前和之前的天数）
-        for (let d = 1; d <= daysCount; d++) {
-          if (realPlan.value[person][`${d}`] === vacationDaykey) {
-            vacationDays++;
+        // // 统计所有已经排班的休假天数（包括当前和之前的天数）
+        // for (let d = 1; d <= daysCount; d++) {
+        //   if (realPlan.value[person][`${d}`] === vacationDaykey) {
+        //     vacationDays++;
+        //   }
+        // }
+        // const remainingDays = daysCount - day + 1; // 包括当前天在内的剩余天数
+        // const remainingVacations = restDays - vacationDays;
+        // // 如果已经达到或超过休假天数限制，不能再安排休假
+        // if (vacationDays >= restDays && radomValue === vacationDaykey) {
+        //   autoSchedule(day, person);
+        //   return;
+        // }
+
+        // // 如果剩余天数等于剩余休假天数，必须安排休假，再不休就没得休了
+        // if (remainingVacations > 0 && remainingVacations === remainingDays) {
+        //   realPlan.value[person][`${day}`] = vacationDaykey;
+        //   console.log(
+        //     `${day} 剩余天数(${remainingDays})等于剩余休假天数(${remainingVacations})，必须安排休息`
+        //   );
+        //   return;
+        // }
+
+        // // 如果剩余休假天数大于0但小于剩余天数，根据概率决定是否安排休假
+        // if (remainingVacations > 0 && remainingVacations < remainingDays) {
+        //   const probability = remainingVacations / remainingDays;
+        //   if (Math.random() < probability && radomValue !== vacationDaykey) {
+        //     realPlan.value[person][`${day}`] = vacationDaykey;
+        //     console.log(`${day} 根据概率(${probability})自动安排休息`);
+        //     return;
+        //   }
+        // }
+
+        //3.不连续上班天数规则
+        //比如上6休1，那么就是每7天中，必须有一天休息
+
+        let sortIndex = (index + 1) % (maxConsecutiveDays + 1);
+        const loopIndex = Math.floor(index / (maxConsecutiveDays + 1));
+
+        sortIndex = sortIndex === 0 ? maxConsecutiveDays + 1 : sortIndex;
+
+        const startIndex = loopIndex * (maxConsecutiveDays + 1) + 1;
+        const endIndex = startIndex + sortIndex - 1;
+
+        console.log(`${day}在${loopIndex}周期中的位置:${sortIndex}`);
+
+        if (sortIndex > 1) {
+          console.log(`需要关注的区间是:${startIndex}~${endIndex - 1}`);
+
+          let start = startIndex;
+          let hasVacation = false;
+          while (start <= endIndex - 1) {
+            const key = days.value[start - 1].fullDate;
+            if (realPlan.value[person][key] === "vacation") {
+              hasVacation = true;
+              if (radomValue === "vacation") {
+                console.log(
+                  "区间内已经有假期,并且当前又排到假期，重新排:",
+                  key
+                );
+                autoSchedule(day, person, index);
+                return;
+              }
+            }
+            start++;
+          }
+
+          if (sortIndex === maxConsecutiveDays + 1 && !hasVacation) {
+            console.log(
+              `${day} 在一个周期的最后一天，并且区间内没有休息日，强制安排休息`
+            );
+            realPlan.value[person][`${day}`] = "vacation";
+            realPlan.value[person][`${day}Type`] = "强制";
           }
         }
-        const remainingDays = daysCount - day + 1; // 包括当前天在内的剩余天数
-        const remainingVacations = restDays - vacationDays;
-        // 如果已经达到或超过休假天数限制，不能再安排休假
-        if (vacationDays >= restDays && radomValue === vacationDaykey) {
-          autoSchedule(day, person);
-          return;
-        }
 
-        // 如果剩余天数等于剩余休假天数，必须安排休假，再不休就没得休了
-        if (remainingVacations > 0 && remainingVacations === remainingDays) {
-          realPlan.value[person][`${day}`] = vacationDaykey;
-          console.log(
-            `${day} 剩余天数(${remainingDays})等于剩余休假天数(${remainingVacations})，必须安排休息`
-          );
-          return;
-        }
+        //(){} 检查前一天开始的连续工作天数
 
-        // 如果剩余休假天数大于0但小于剩余天数，根据概率决定是否安排休假
-        if (remainingVacations > 0 && remainingVacations < remainingDays) {
-          const probability = remainingVacations / remainingDays;
-          if (Math.random() < probability && radomValue !== vacationDaykey) {
-            realPlan.value[person][`${day}`] = vacationDaykey;
-            console.log(`${day} 根据概率(${probability})自动安排休息`);
-            return;
-          }
-        }
-        console.log(`${day} 没有个人计划，自动排班${radomValue}`);
+        // let consecutiveDays = 0;
+        // for (let d = lastday; d > 0; d--) {
+        //   if (realPlan.value[person][`${d}`] !== "vacation") {
+        //     consecutiveDays++;
+        //   } else {
+        //     break;
+        //   }
+        // }
+        // if (consecutiveDays >= maxConsecutiveDays) {
+        //   realPlan.value[person][`${day}`] = "vacation";
+
+        //   return;
+        // }
+
+        // console.log(`${day} 没有个人计划，自动排班${radomValue}`);
 
         return;
     }
@@ -421,17 +587,32 @@ onMounted(() => {
       font-weight: bold;
       color: black;
     }
-    .start-button {
+    .left-operations {
       position: absolute;
-      right: 50px;
-      background: #44c662;
-      color: white;
+      left: 20px;
+      top: 20px;
+      display: flex;
+      gap: 10px;
+      .start-button {
+        background: #44c662;
+        color: white;
+      }
     }
-    .setting-button {
+
+    .right-operations {
       position: absolute;
-      right: 10px;
-      background: #4466ff;
-      color: white;
+      right: 20px;
+      top: 20px;
+      display: flex;
+      gap: 10px;
+      .start-button {
+        background: #44c662;
+        color: white;
+      }
+      .setting-button {
+        background: #4466ff;
+        color: white;
+      }
     }
   }
 
@@ -440,11 +621,18 @@ onMounted(() => {
     padding: 0 20px;
     overflow: hidden;
 
+    .el-table__cell {
+      padding: 0 !important;
+      .cell {
+        padding: 0 !important;
+      }
+    }
     .date-header {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 2px;
+      // padding: 4px 8px;
 
       .day-number {
         font-size: 14px;
@@ -457,14 +645,22 @@ onMounted(() => {
         color: @text-light-color;
       }
     }
-    .date-header.d0 {
-      background: #4466ff;
+    .el-table__cell.d0,
+    .el-table__cell.d6 {
+      background: #dbdbdb7e;
+    }
+
+    .el-table__cell {
+      height: 60px !important;
     }
 
     .cell-content {
       display: flex;
       flex-direction: column;
       gap: 4px;
+      padding: 4px 8px;
+      height: 100%;
+
       .cell-rule {
         display: flex;
         align-items: center;
@@ -481,6 +677,10 @@ onMounted(() => {
           border-radius: 4px;
           display: inline-block;
           text-align: center;
+        }
+        .rule-type {
+          font-size: 12px;
+          color: @text-color;
         }
       }
     }
@@ -523,7 +723,11 @@ onMounted(() => {
 
 .work-details {
   display: flex;
-  flex-direction: roww;
+  flex-direction: row;
   justify-content: space-between;
+  font-size: 14px;
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 </style>

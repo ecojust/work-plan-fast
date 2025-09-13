@@ -86,20 +86,22 @@
           <div class="rule-section">
             <h3>连续工作规则</h3>
             <el-form :model="ruleForm" label-width="150px">
-              <!-- <el-form-item label="最大连续上班天数">
+              <el-form-item
+                :label="'上 ' + ruleForm.maxConsecutiveDays + ' 休1'"
+              >
                 <el-input-number
                   v-model="ruleForm.maxConsecutiveDays"
                   :min="1"
                   :max="14"
                 />
-              </el-form-item> -->
-              <el-form-item label="月休息天数" label-width="150px">
+              </el-form-item>
+              <!-- <el-form-item label="月休息天数" label-width="150px">
                 <el-input-number
                   v-model="ruleForm.restDays"
                   :min="1"
                   :max="20"
                 />
-              </el-form-item>
+              </el-form-item> -->
             </el-form>
           </div>
 
