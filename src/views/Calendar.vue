@@ -6,14 +6,23 @@
           <i class="iconfont icon-export1"></i>
         </el-button>
 
-        <el-switch
+        <el-button
+          :color="debugmode ? '#13ce66' : '#909399'"
+          circle
+          round
+          @click="debugmode = !debugmode"
+        >
+          <i class="iconfont icon-debug"></i>
+        </el-button>
+
+        <!-- <el-switch
           v-model="debugmode"
           class="ml-2"
           inline-prompt
           style="--el-switch-on-color: #13ce66"
           active-text="开启排班跟踪"
           inactive-text="关闭排班跟踪"
-        />
+        /> -->
       </div>
 
       <div class="center">
@@ -246,7 +255,7 @@
       :modal="false"
       :show-close="false"
       :close-on-click-modal="false"
-      title="自动生成记录跟踪"
+      title="生成记录跟踪"
       direction="btt"
     >
       <el-scrollbar wrap-style="height: 205px">

@@ -6,6 +6,13 @@
   "description": "排班计划",
   "glyphs": [
     {
+      "icon_id": "1115014",
+      "name": "debug",
+      "font_class": "debug",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
       "icon_id": "8474279",
       "name": "info",
       "font_class": "info",

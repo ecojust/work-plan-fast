@@ -16,7 +16,7 @@ function formatDate(date) {
     date.getSeconds()
   )}`;
 
-  return d + t;
+  return d;
 }
 
 // Read current version from package.json
