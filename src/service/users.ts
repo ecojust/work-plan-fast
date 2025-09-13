@@ -2,6 +2,8 @@ import File from "./file";
 
 export default class User {
   static async getUsers() {
+    //@ts-ignore
+
     if (process.env.NODE_ENV === "development") {
       return [
         { name: "user1", desc: "First user" },
@@ -14,6 +16,8 @@ export default class User {
   }
 
   static async setUsers(users: Array<any>) {
+    //@ts-ignore
+
     if (process.env.NODE_ENV === "development") {
       return;
     }

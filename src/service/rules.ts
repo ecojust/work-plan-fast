@@ -3,6 +3,7 @@ import File from "./file";
 export default class Rule {
   //不相连班次
   static async getNoLink() {
+    //@ts-ignore
     if (process.env.NODE_ENV === "development") {
       return [{ last: "D", now: "B" }];
     }
@@ -12,6 +13,7 @@ export default class Rule {
   }
 
   static async setNoLink(rules: Array<any>) {
+    //@ts-ignore
     if (process.env.NODE_ENV === "development") {
       return;
     }
@@ -24,6 +26,7 @@ export default class Rule {
 
   //休息
   static async getRest() {
+    //@ts-ignore
     if (process.env.NODE_ENV === "development") {
       return 8;
     }
@@ -33,6 +36,8 @@ export default class Rule {
   }
 
   static async setRest(day: number) {
+    //@ts-ignore
+
     if (process.env.NODE_ENV === "development") {
       return;
     }
@@ -42,6 +47,8 @@ export default class Rule {
 
   //不连续上班天数
   static async getMaxConsecutiveDays() {
+    //@ts-ignore
+
     if (process.env.NODE_ENV === "development") {
       return 6;
     }

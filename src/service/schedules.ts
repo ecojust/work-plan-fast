@@ -2,6 +2,8 @@ import File from "./file";
 
 export default class Schedule {
   static async getSchedules() {
+    //@ts-ignore
+
     if (process.env.NODE_ENV === "development") {
       return [
         { label: "休假", value: "vacation", color: "#dbdbdb" },
@@ -21,6 +23,8 @@ export default class Schedule {
   }
 
   static async setSchedules(schedules: Array<any>) {
+    //@ts-ignore
+
     if (process.env.NODE_ENV === "development") {
       return;
     }
