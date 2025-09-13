@@ -47,16 +47,16 @@
       >
         <el-table-column
           prop="name"
-          label="姓名"
+          label="name"
           width="150"
           fixed
           align="center"
         >
           <template #header>
-            <div class="date-header">姓名</div>
+            <div class="date-header" style="width: 150px">姓名</div>
           </template>
           <template #default="scope">
-            <div class="cell-content">
+            <div class="cell-content" style="width: 150px">
               <b class="user-name">{{ scope.row.name }}</b>
 
               <div>
@@ -75,18 +75,18 @@
           prop="date"
           :label="day.weekdayIndex + ''"
           :weekIndex="day.weekdayIndex"
-          width="160"
           v-for="day in days"
           :key="day.day"
+          width="180"
         >
           <template #header>
-            <div :class="['date-header']">
+            <div :class="['date-header']" style="width: 180px">
               <span class="day-number">{{ day.day }}</span>
               <span class="weekday">{{ day.weekday }}</span>
             </div>
           </template>
           <template #default="scope">
-            <div :class="['cell-content']">
+            <div :class="['cell-content']" style="width: 180px">
               <div class="cell-rule">
                 <span class="rule-name">计划:</span>
                 <el-select
@@ -154,7 +154,7 @@
       center
       align-center
     >
-      <Config v-if="showConfig" />
+      <Config ref="configRef" />
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="closeConfig">关闭</el-button>
@@ -233,7 +233,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, nextTick } from "vue";
 import { ElLoading, ElMessage } from "element-plus";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
@@ -253,16 +253,21 @@ const showConfig = ref(false);
 const versionDialogVisible = ref(false);
 // const version = ref("1.0.1");
 
-const showSettings = () => {
+const showSettings = async () => {
   console.log("显示设置");
   showConfig.value = true;
   settingsVisible.value = true;
+
+  await nextTick();
+  configRef.value.initdata();
 };
 
 const handleVersion = () => {
   versionDialogVisible.value = true;
 };
 const dateRange = ref("");
+
+const configRef = ref(null);
 
 // 设置为中文
 dayjs.locale("zh-cn");
@@ -703,6 +708,11 @@ onMounted(() => {
       background: #dbdbdb7e;
     }
 
+    .el-table__cell.dname {
+      background: #ffffff;
+      width: 120px;
+    }
+
     .el-table__cell {
       height: 60px !important;
     }
@@ -779,10 +789,11 @@ onMounted(() => {
   flex-direction: row;
   justify-content: space-between;
   font-size: 14px;
-  background: rgba(123, 183, 217, 0.1);
+  background: rgb(69, 181, 246);
   padding: 4px 8px;
   border-radius: 6px;
   margin: 2px 0;
   border-radius: 4px;
+  color: #fff;
 }
 </style>

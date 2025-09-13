@@ -159,7 +159,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, defineExpose } from "vue";
 import { ElMessage } from "element-plus";
 import User from "../service/users";
 import Schedule from "../service/schedules";
@@ -241,8 +241,7 @@ const saveRules = async () => {
   });
 };
 
-onMounted(async () => {
-  console.log("Config mounted");
+const initdata = async () => {
   users.value = await User.getUsers();
   schedules.value = await Schedule.getSchedules();
   noLinkRules.value = await Rule.getNoLink();
@@ -250,7 +249,26 @@ onMounted(async () => {
     maxConsecutiveDays: await Rule.getMaxConsecutiveDays(),
     restDays: await Rule.getRest(),
   };
+};
+
+defineExpose({
+  initdata,
 });
+
+// onActivated(async () => {
+//   console.log("Config activated");
+//   await initdata();
+// });
+
+// onDeactivated(async () => {
+//   console.log("Config deactivated");
+//   await initdata();
+// });
+
+// onMounted(async () => {
+//   console.log("Config mounted");
+//   await initdata();
+// });
 </script>
 
 <style lang="less" scoped>
