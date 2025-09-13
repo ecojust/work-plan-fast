@@ -146,6 +146,7 @@
 
     <!-- 设置对话框 -->
     <el-dialog
+      v-model="settingsVisible"
       title="排班设置"
       width="60%"
       :destroy-on-close="false"
@@ -253,6 +254,7 @@ const versionDialogVisible = ref(false);
 // const version = ref("1.0.1");
 
 const showSettings = () => {
+  console.log("显示设置");
   showConfig.value = true;
   settingsVisible.value = true;
 };
