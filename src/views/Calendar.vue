@@ -157,7 +157,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog title="导出预览" v-model="exportPreviewVisible">
+    <el-dialog title="导出预览" width="60%" v-model="exportPreviewVisible">
       <el-table :data="tableData" border style="width: 100%" id="previewTable">
         <el-table-column
           prop="name"
@@ -186,8 +186,9 @@
         >
           <template #header>
             <div :class="['date-header']">
-              <span class="day-number">{{ day.day }}</span>
-              <span class="weekday">{{ day.weekday }}</span>
+              <span class="day-number"
+                >{{ day.fullDate }}({{ day.weekday }})</span
+              >
             </div>
           </template>
           <template #default="scope">
@@ -539,30 +540,33 @@ onMounted(() => {
 
 <style lang="less">
 // 变量定义
-@primary-color: #409eff;
-@border-color: #ddd;
-@text-color: #333;
-@text-light-color: #666;
-@background-color: #fff;
+@primary-color: #4c84ff;
+@secondary-color: #ff6b6b;
+@border-color: #e8eff5;
+@text-color: #2c3e50;
+@text-light-color: #7f8c9a;
+@background-color: #f8fafc;
 
 .calendar-container {
   max-width: 1200px;
-  margin: 0 auto;
-  height: 100vh;
-  border: 1px solid @border-color;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  min-height: calc(100vh - 40px);
+  border-radius: 16px;
+  background: linear-gradient(145deg, #f7f4e9, #ecf5f8);
+  box-shadow: 0 15px 35px rgba(136, 184, 146, 0.15);
   display: flex;
   flex-direction: column;
 
   .calendar-header {
-    padding: 20px;
-    background: @background-color;
-    border-bottom: 1px solid @border-color;
+    padding: 24px;
+    background: transparent;
+    border-bottom: 1px solid rgba(232, 239, 245, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
     margin-bottom: 20px;
+    backdrop-filter: blur(10px);
 
     position: relative;
 
@@ -615,21 +619,45 @@ onMounted(() => {
 
   .calendar-table-container {
     flex: 1;
-    padding: 0 20px;
+    padding: 0 24px 24px;
     overflow: hidden;
 
+    .el-table {
+      background: rgba(247, 244, 233, 0.6);
+      border-radius: 12px;
+      &::before {
+        display: none;
+      }
+
+      .el-table__inner-wrapper::before {
+        display: none;
+      }
+      .el-table-fixed-column--left {
+        box-shadow: none !important;
+        background-color: rgb(255, 255, 255);
+      }
+    }
     .el-table__cell {
       padding: 0 !important;
+      background: transparent;
+      transition: all 0.3s ease;
+      border-color: rgba(136, 184, 146, 0.2) !important;
+
+      &:hover {
+        background-color: rgba(123, 183, 217, 0.1);
+      }
+
       .cell {
         padding: 0 !important;
       }
     }
+
     .date-header {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
-      // padding: 4px 8px;
+      gap: 4px;
+      padding: 8px;
 
       .day-number {
         font-size: 14px;
@@ -723,8 +751,10 @@ onMounted(() => {
   flex-direction: row;
   justify-content: space-between;
   font-size: 14px;
-  background: #f0f0f0;
+  background: rgba(123, 183, 217, 0.1);
   padding: 4px 8px;
+  border-radius: 6px;
+  margin: 2px 0;
   border-radius: 4px;
 }
 </style>
