@@ -1,18 +1,19 @@
 {
   "name": "wpf",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "dev": "yarn run buildVersion && vite",
+    "build": "yarn run buildVersion && vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "b": "yarn tauri build",
     "d": "yarn tauri dev",
     "a": "yarn tauri android dev",
     "i": "yarn tauri ios dev",
-    "logo": "cargo tauri icon ./icon.png"
+    "logo": "cargo tauri icon ./icon.png",
+    "buildVersion": "node ./src/service/buildVersion.js"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

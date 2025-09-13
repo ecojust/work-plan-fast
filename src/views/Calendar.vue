@@ -30,6 +30,10 @@
         <el-button color="blue" circle round @click="showSettings">
           <i class="iconfont icon-setting"></i>
         </el-button>
+
+        <el-button color="#dbdbdb" circle round @click="handleVersion">
+          <i class="iconfont icon-info"></i>
+        </el-button>
       </div>
     </div>
     <div class="calendar-table-container">
@@ -209,6 +213,21 @@
         </span>
       </template>
     </el-dialog>
+
+    <!-- 版本信息对话框 -->
+    <el-dialog v-model="versionDialogVisible" width="30%" center align-center>
+      <h2 style="text-align: center">当前版本</h2>
+
+      <div style="text-align: left">
+        <p>版本号：{{ version }}</p>
+        <p>构建时间：{{ time }}</p>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="versionDialogVisible = false">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -225,14 +244,21 @@ import Config from "./Config.vue";
 import ContributionGraph from "../components/ContributionGraph.vue";
 import exportToExcel from "../service/exportToExcel";
 import Util from "../service/utils";
+import { version, time } from "../service/version";
 
 const settingsVisible = ref(false);
 const exportPreviewVisible = ref(false);
 const showConfig = ref(false);
+const versionDialogVisible = ref(false);
+// const version = ref("1.0.1");
 
 const showSettings = () => {
   showConfig.value = true;
   settingsVisible.value = true;
+};
+
+const handleVersion = () => {
+  versionDialogVisible.value = true;
 };
 const dateRange = ref("");
 
