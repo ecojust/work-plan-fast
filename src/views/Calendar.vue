@@ -1,11 +1,6 @@
 <template>
   <div class="calendar-container">
-    <!-- <ContributionGraph :plan-data="realPlan" :schedules="workTypes" /> -->
     <div class="calendar-header">
-      <!-- <button class="nav-button" @click="previousMonth">&lt;</button>
-      <span class="month-title">{{ currentYear }}年{{ currentMonth }}月</span>
-      <button class="nav-button" @click="nextMonth">&gt;</button> -->
-
       <div class="left-operations">
         <el-button color="#009090" circle round @click="handleExport">
           <i class="iconfont icon-export1"></i>
@@ -67,21 +62,6 @@
                     getCount(scope.row.name, t.value)
                   }}</span>
                 </div>
-                <!-- <el-popover placement="right" width="200" trigger="click">
-                  <template #reference>
-                    <el-icon><Histogram /></el-icon>
-                  </template>
-                  <div
-                    class="work-details"
-                    v-for="t in workTypes"
-                    :key="t.value"
-                  >
-                    <span class="work-details-label">{{ t.label }}</span>
-                    <span class="work-details-value">{{
-                      getCount(scope.row.name, t.value)
-                    }}</span>
-                  </div>
-                </el-popover> -->
               </div>
             </div>
           </template>
@@ -339,21 +319,6 @@ const renderworkTypeColor = (value) => {
   const type = workTypes.value.find((type) => type.value === value);
   return type ? type.color : "";
 };
-
-// 计算当月的天数和对应的星期
-// const days = computed(() => {
-//   const daysInMonth = dayjs(
-//     `${currentYear.value}-${currentMonth.value}`
-//   ).daysInMonth();
-//   return Array.from({ length: daysInMonth }, (_, i) => {
-//     const day = i + 1;
-//     const date = dayjs(`${currentYear.value}-${currentMonth.value}-${day}`);
-//     return {
-//       day,
-//       weekday: date.format("ddd"), // 星期几的中文简写
-//     };
-//   });
-// });
 
 const days = ref([]);
 
