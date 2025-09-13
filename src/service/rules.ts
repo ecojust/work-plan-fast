@@ -54,6 +54,19 @@ export default class Rule {
     }
     const content = await File._readFile("./continus.txt", "6");
     const data = content?.data || 6;
-    return data;
+    if (typeof data === "number") {
+      return data;
+    } else {
+      return parseInt(data);
+    }
+  }
+
+  static async setMaxConsecutiveDays(day: number) {
+    //@ts-ignore
+    if (process.env.NODE_ENV === "development") {
+      return;
+    }
+    const result = await File._writeFile("./continus.txt", day.toString());
+    return result;
   }
 }

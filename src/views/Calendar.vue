@@ -5,6 +5,15 @@
         <el-button color="#009090" circle round @click="handleExport">
           <i class="iconfont icon-export1"></i>
         </el-button>
+
+        <el-switch
+          v-model="debugmode"
+          class="ml-2"
+          inline-prompt
+          style="--el-switch-on-color: #13ce66"
+          active-text="开启排班跟踪"
+          inactive-text="关闭排班跟踪"
+        />
       </div>
 
       <div class="center">
@@ -229,6 +238,21 @@
         </span>
       </template>
     </el-dialog>
+
+    <el-drawer
+      class="debug-drawer"
+      modal-class="debug-drawer-modal"
+      v-model="debugmode"
+      :modal="false"
+      :show-close="false"
+      :close-on-click-modal="false"
+      title="自动生成记录跟踪"
+      direction="btt"
+    >
+      <el-scrollbar wrap-style="height: 205px">
+        <div class="logs" v-for="log in generateLogs" :key="log">{{ log }}</div>
+      </el-scrollbar>
+    </el-drawer>
   </div>
 </template>
 
@@ -278,9 +302,13 @@ const currentMonth = ref(dayjs().month() + 1);
 const workTypes = ref(Schedule.getSchedules());
 const tableData = ref([]);
 
+const debugmode = ref(false); //排班跟踪模式
+
 // 存储计划数据
 const planData = ref({});
 const realPlan = ref({});
+
+const generateLogs = ref([]);
 
 const people = computed(() => tableData.value.map((item) => item.name));
 
@@ -381,7 +409,6 @@ const handleDateChange = async (value) => {
   loadingInstance.close();
 };
 
-let restDays = 0; //一个月休息天数
 let schedules = []; //班次计划
 let maxConsecutiveDays = 0; //不连续上班天数,上5休1
 const startScheduling = async () => {
@@ -392,10 +419,16 @@ const startScheduling = async () => {
     });
     return;
   }
+
+  generateLogs.value = [];
+
+  await nextTick();
   resetPlans();
-  restDays = await Rule.getRest();
   maxConsecutiveDays = await Rule.getMaxConsecutiveDays();
   schedules = await Schedule.getSchedules();
+
+  generateLogs.value.push(`排班规则：上${maxConsecutiveDays}休1,`);
+
   people.value.forEach((person) => {
     days.value.forEach((day, index) => {
       autoSchedule(day.fullDate, person, index);
@@ -405,17 +438,28 @@ const startScheduling = async () => {
 };
 
 const autoSchedule = (day, person, index) => {
+  let sortIndex = (index + 1) % (maxConsecutiveDays + 1);
+  sortIndex = sortIndex === 0 ? maxConsecutiveDays + 1 : sortIndex;
+  const loopIndex = Math.floor(index / (maxConsecutiveDays + 1));
+
+  // generateLogs.value.push(
+  //   `maxConsecutiveDays + 1=${maxConsecutiveDays + 1}
+  //   sortIndex=${(index + 1) % (maxConsecutiveDays + 1)}
+  //   loopIndex=${Math.floor(index / (maxConsecutiveDays + 1))}`
+  // );
   // 如果有个人计划，设置为"个人计划"
   if (planData.value[person][day]) {
     realPlan.value[person][`${day}`] = planData.value[person][day];
     realPlan.value[person][`${day}Type`] = "预计划";
 
+    generateLogs.value.push(
+      `${day},第${loopIndex}周期第${sortIndex}天，${person}有个人计划，按计划排班:${planData.value[person][day]}`
+    );
+
     console.log("有个人计划，按计划排班", person, planData.value[person][day]);
     return;
   } else {
     const radomValue = random(workTypes.value.map((type) => type.value));
-    realPlan.value[person][`${day}`] = radomValue;
-    realPlan.value[person][`${day}Type`] = "随机";
 
     switch (day) {
       default:
@@ -432,51 +476,8 @@ const autoSchedule = (day, person, index) => {
           }
         }
 
-        // 2.休假天数规则
-        // let vacationDays = 0;
-        // const vacationDaykey = "vacation";
-        // const daysCount = days.value.length;
-
-        // // 统计所有已经排班的休假天数（包括当前和之前的天数）
-        // for (let d = 1; d <= daysCount; d++) {
-        //   if (realPlan.value[person][`${d}`] === vacationDaykey) {
-        //     vacationDays++;
-        //   }
-        // }
-        // const remainingDays = daysCount - day + 1; // 包括当前天在内的剩余天数
-        // const remainingVacations = restDays - vacationDays;
-        // // 如果已经达到或超过休假天数限制，不能再安排休假
-        // if (vacationDays >= restDays && radomValue === vacationDaykey) {
-        //   autoSchedule(day, person);
-        //   return;
-        // }
-
-        // // 如果剩余天数等于剩余休假天数，必须安排休假，再不休就没得休了
-        // if (remainingVacations > 0 && remainingVacations === remainingDays) {
-        //   realPlan.value[person][`${day}`] = vacationDaykey;
-        //   console.log(
-        //     `${day} 剩余天数(${remainingDays})等于剩余休假天数(${remainingVacations})，必须安排休息`
-        //   );
-        //   return;
-        // }
-
-        // // 如果剩余休假天数大于0但小于剩余天数，根据概率决定是否安排休假
-        // if (remainingVacations > 0 && remainingVacations < remainingDays) {
-        //   const probability = remainingVacations / remainingDays;
-        //   if (Math.random() < probability && radomValue !== vacationDaykey) {
-        //     realPlan.value[person][`${day}`] = vacationDaykey;
-        //     console.log(`${day} 根据概率(${probability})自动安排休息`);
-        //     return;
-        //   }
-        // }
-
         //3.不连续上班天数规则
         //比如上6休1，那么就是每7天中，必须有一天休息
-
-        let sortIndex = (index + 1) % (maxConsecutiveDays + 1);
-        const loopIndex = Math.floor(index / (maxConsecutiveDays + 1));
-
-        sortIndex = sortIndex === 0 ? maxConsecutiveDays + 1 : sortIndex;
 
         const startIndex = loopIndex * (maxConsecutiveDays + 1) + 1;
         const endIndex = startIndex + sortIndex - 1;
@@ -510,29 +511,21 @@ const autoSchedule = (day, person, index) => {
             );
             realPlan.value[person][`${day}`] = "vacation";
             realPlan.value[person][`${day}Type`] = "强制";
+
+            generateLogs.value.push(
+              `(${index}):${day},第${loopIndex}周期第${sortIndex}天，${person}在一个周期的最后一天，并且区间内没有休息日，强制安排休息`
+            );
+            return;
           }
         }
-
-        //(){} 检查前一天开始的连续工作天数
-
-        // let consecutiveDays = 0;
-        // for (let d = lastday; d > 0; d--) {
-        //   if (realPlan.value[person][`${d}`] !== "vacation") {
-        //     consecutiveDays++;
-        //   } else {
-        //     break;
-        //   }
-        // }
-        // if (consecutiveDays >= maxConsecutiveDays) {
-        //   realPlan.value[person][`${day}`] = "vacation";
-
-        //   return;
-        // }
-
-        // console.log(`${day} 没有个人计划，自动排班${radomValue}`);
-
-        return;
     }
+
+    realPlan.value[person][`${day}`] = radomValue;
+    realPlan.value[person][`${day}Type`] = "随机";
+
+    generateLogs.value.push(
+      `(${index}):${day},第${loopIndex}周期第${sortIndex}天，${person}无个人计划，随机排班:${radomValue}`
+    );
   }
 };
 
@@ -795,5 +788,24 @@ onMounted(() => {
   margin: 2px 0;
   border-radius: 4px;
   color: #fff;
+}
+
+.debug-drawer-modal {
+  pointer-events: none;
+  .debug-drawer {
+    pointer-events: all;
+    .el-drawer__header {
+      margin-bottom: 4px;
+    }
+    .el-drawer__body {
+      padding: 2px 16px;
+    }
+    .logs {
+      padding: 4px 8px;
+      border-bottom: 1px solid #eee;
+      font-size: 12px;
+      color: #333;
+    }
+  }
 }
 </style>

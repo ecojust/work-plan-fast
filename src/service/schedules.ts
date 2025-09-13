@@ -17,7 +17,12 @@ export default class Schedule {
     let schedules = JSON.parse(content?.data || "[]");
 
     if (schedules.length == 0) {
-      schedules = [{ label: "休假", value: "vacation", color: "#dbdbdb" }];
+      schedules = [
+        { label: "休假", value: "vacation", color: "#dbdbdb" },
+        { label: "7:00-15:00", value: "早班", color: "#1890ff" },
+        { label: "10:00-18:00", value: "中班", color: "#00ff00" },
+        { label: "14:00-22:00", value: "晚班", color: "red" },
+      ];
     }
     return schedules;
   }

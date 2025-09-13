@@ -16,7 +16,10 @@
         "width": 800,
         "height": 600,
         "additionalBrowserArgs": "disable-web-security",
-        "devtools": true
+        "devtools": true,
+        "alwaysOnTop": false,
+        "fullscreen": false,
+        "focus": true
       }
     ],
     "security": {

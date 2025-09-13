@@ -234,7 +234,8 @@ const removeNoLinkRule = (index: number) => {
 const saveRules = async () => {
   // TODO: Implement rule saving logic
   await Rule.setNoLink(noLinkRules.value);
-  await Rule.setRest(ruleForm.value.restDays);
+  // await Rule.setRest(ruleForm.value.restDays);
+  await Rule.setMaxConsecutiveDays(ruleForm.value.maxConsecutiveDays);
   ElMessage({
     message: "保存成功",
     type: "success",

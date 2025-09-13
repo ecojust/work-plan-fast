@@ -8,13 +8,15 @@ const __dirname = dirname(__filename);
 // Format date to YYYY-MM-DD HH:mm:ss
 function formatDate(date) {
   const pad = (num) => String(num).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+  const d = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
     date.getDate()
   )}`;
 
-  //    ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(
-  //     date.getSeconds()
-  //   )}
+  const t = `    ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(
+    date.getSeconds()
+  )}`;
+
+  return d + t;
 }
 
 // Read current version from package.json

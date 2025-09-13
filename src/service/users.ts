@@ -5,13 +5,13 @@ export default class User {
     //@ts-ignore
 
     if (process.env.NODE_ENV === "development") {
-      return [
-        { name: "user1", desc: "First user" },
-        { name: "user2", desc: "Second user" },
-      ];
+      return [{ name: "张三", desc: "First user" }];
     }
     const content = await File._readFile("./users.json", "[]");
     const users = JSON.parse(content?.data || "[]");
+    if (users.length == 0) {
+      return [{ name: "张三", desc: "First user" }];
+    }
     return users;
   }
 
