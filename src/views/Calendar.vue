@@ -7,12 +7,7 @@
       <button class="nav-button" @click="nextMonth">&gt;</button> -->
 
       <div class="left-operations">
-        <el-button
-          class="start-button"
-          circle
-          round
-          @click="exportPreviewVisible = true"
-        >
+        <el-button color="#009090" circle round @click="handleExport">
           <i class="iconfont icon-export1"></i>
         </el-button>
       </div>
@@ -22,22 +17,22 @@
           v-model="dateRange"
           type="daterange"
           range-separator="至"
-          start-placeholder="开始"
-          end-placeholder="结束"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
           @change="handleDateChange"
         />
       </div>
 
       <div class="right-operations">
-        <el-button class="start-button" circle round @click="startScheduling">
+        <el-button color="#00ff00" circle round @click="startScheduling">
           <i class="iconfont icon-weibiaoti518"></i>
         </el-button>
 
-        <el-button class="start-button" circle round @click="clearResults">
+        <el-button color="red" circle round @click="clearResults">
           <i class="iconfont icon-clear"></i>
         </el-button>
 
-        <el-button class="setting-button" circle round @click="showSettings">
+        <el-button color="blue" circle round @click="showSettings">
           <i class="iconfont icon-setting"></i>
         </el-button>
       </div>
@@ -148,6 +143,20 @@
             </div>
           </template>
         </el-table-column>
+
+        <el-table-column
+          v-if="days.length == 0"
+          prop="name"
+          label="温馨提示"
+          fixed
+          align="center"
+        >
+          <template #default="scope">
+            <div class="cell-content">
+              <b class="user-name">请先选择日期范围</b>
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
 
@@ -224,7 +233,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { ElLoading } from "element-plus";
+import { ElLoading, ElMessage } from "element-plus";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 import random from "randomize";
@@ -233,8 +242,8 @@ import Schedule from "../service/schedules";
 import Rule from "../service/rules";
 import Config from "./Config.vue";
 import ContributionGraph from "../components/ContributionGraph.vue";
-
 import exportToExcel from "../service/exportToExcel";
+import Util from "../service/utils";
 
 const settingsVisible = ref(false);
 const exportPreviewVisible = ref(false);
@@ -262,6 +271,17 @@ const realPlan = ref({});
 const people = computed(() => tableData.value.map((item) => item.name));
 
 const eleIdPrefix = ref("prefix"); // 循环Dmo绑定的ID前缀
+
+const handleExport = () => {
+  if (days.value.length === 0) {
+    ElMessage({
+      message: "请先选择日期并排班",
+      type: "warning",
+    });
+    return;
+  }
+  exportPreviewVisible.value = true;
+};
 const exportExcel = async () => {
   await exportToExcel("previewTable", "排班计划");
   exportPreviewVisible.value = false;
@@ -337,7 +357,11 @@ const renderworkTypeColor = (value) => {
 
 const days = ref([]);
 
-const handleDateChange = (value) => {
+const handleDateChange = async (value) => {
+  const loadingInstance = ElLoading.service();
+
+  await Util.sleep(1000);
+
   initAll();
   const start = dayjs(value[0]);
   const end = dayjs(value[1]);
@@ -355,12 +379,20 @@ const handleDateChange = (value) => {
   });
 
   days.value = newDays;
+  loadingInstance.close();
 };
 
 let restDays = 0; //一个月休息天数
 let schedules = []; //班次计划
 let maxConsecutiveDays = 0; //不连续上班天数,上5休1
 const startScheduling = async () => {
+  if (days.value.length === 0) {
+    ElMessage({
+      message: "请先选择日期范围",
+      type: "warning",
+    });
+    return;
+  }
   resetPlans();
   restDays = await Rule.getRest();
   maxConsecutiveDays = await Rule.getMaxConsecutiveDays();
@@ -593,10 +625,10 @@ onMounted(() => {
       top: 20px;
       display: flex;
       gap: 10px;
-      .start-button {
-        background: #44c662;
-        color: white;
-      }
+      // .start-button {
+      //   background: #44c662;
+      //   color: white;
+      // }
     }
 
     .right-operations {
@@ -605,14 +637,14 @@ onMounted(() => {
       top: 20px;
       display: flex;
       gap: 10px;
-      .start-button {
-        background: #44c662;
-        color: white;
-      }
-      .setting-button {
-        background: #4466ff;
-        color: white;
-      }
+      // .start-button {
+      //   background: #44c662;
+      //   color: white;
+      // }
+      // .setting-button {
+      //   background: #4466ff;
+      //   color: white;
+      // }
     }
   }
 
