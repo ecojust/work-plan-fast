@@ -197,6 +197,7 @@
       class="debug-drawer"
       modal-class="debug-drawer-modal"
       v-model="debugmode"
+      size="265"
       :modal="false"
       :show-close="false"
       :close-on-click-modal="false"
@@ -399,7 +400,7 @@ const autoSchedule = (day, person, index) => {
     realPlan.value[person][`${day}`] = planData.value[person][day];
     realPlan.value[person][`${day}Type`] = "预计划";
     generateLogs.value.push(
-      `${day},第${loopIndex}周期第${sortIndex}天，${person}有个人计划，按计划排班:${planData.value[person][day]}`
+      `(${index}):${day},第${loopIndex}周期第${sortIndex}天，${person}有个人计划，按计划排班:${planData.value[person][day]}`
     );
     return;
   } else {
@@ -716,7 +717,7 @@ onMounted(() => {
     position: absolute;
     bottom: 0;
     margin: 0 auto;
-    z-index: 999999;
+    z-index: 101;
     color: rgb(46, 46, 46);
     font-weight: 900;
     font-family: "Courier New, Courier, monospace";
