@@ -1,5 +1,6 @@
 <template>
   <div class="calendar-container">
+    <!-- <el-card> -->
     <!-- 头部操作按钮 -->
     <div class="calendar-header">
       <div class="left-operations">
@@ -41,9 +42,9 @@
           <i class="iconfont icon-setting"></i>
         </el-button>
 
-        <el-button color="#dbdbdb" circle round @click="handleVersion">
+        <!-- <el-button color="#aeaeae" circle round @click="handleVersion">
           <i class="iconfont icon-info"></i>
-        </el-button>
+        </el-button> -->
       </div>
     </div>
 
@@ -155,6 +156,7 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- </el-card> -->
 
     <!-- 设置对话框 -->
     <el-dialog
@@ -215,6 +217,10 @@
         <div class="logs" v-for="log in generateLogs" :key="log">{{ log }}</div>
       </el-scrollbar>
     </el-drawer>
+
+    <div class="bottom-version">
+      版本号：{{ version }} &nbsp;&nbsp; 构建时间：{{ time }}
+    </div>
   </div>
 </template>
 
@@ -278,7 +284,6 @@ const handleExport = async () => {
   }
   exportPreviewVisible.value = true;
   await nextTick();
-
   await exportRef.value.formatData();
 };
 const exportExcel = async () => {
@@ -516,13 +521,14 @@ onMounted(() => {
 
 .calendar-container {
   max-width: 1200px;
-  margin: 20px auto;
+  margin: auto;
   min-height: calc(100vh - 40px);
   border-radius: 16px;
   background: linear-gradient(145deg, #f7f4e9, #ecf5f8);
   box-shadow: 0 15px 35px rgba(136, 184, 146, 0.15);
   display: flex;
   flex-direction: column;
+  position: relative;
 
   .calendar-header {
     padding: 24px;
@@ -715,6 +721,19 @@ onMounted(() => {
         gap: 4px;
       }
     }
+  }
+
+  .bottom-version {
+    position: absolute;
+    bottom: 0;
+    margin: 0 auto;
+    z-index: 999999;
+    color: rgb(46, 46, 46);
+    font-weight: 900;
+    font-family: "Courier New, Courier, monospace";
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
   }
 }
 

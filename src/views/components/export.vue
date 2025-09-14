@@ -76,7 +76,7 @@ const workTypes = ref([]);
 
 const showResult = ref(false);
 
-const renderworkType = async (value: any) => {
+const renderworkType = (value: any) => {
   const type = workTypes.value.find((type) => type.value === value);
   console.log("type", type);
 
@@ -85,13 +85,9 @@ const renderworkType = async (value: any) => {
 
 const formatData = async () => {
   showResult.value = false;
-
   workTypes.value = await Schedule.getSchedules();
   await nextTick();
-
-  setTimeout(() => {
-    showResult.value = true;
-  }, 2000);
+  showResult.value = true;
 };
 
 defineExpose({
