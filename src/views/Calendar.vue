@@ -406,30 +406,30 @@ const autoSchedule = (day, person, index) => {
 
     switch (day) {
       default:
-        var lastday = days.value[index - 1] ? days.value[index - 1].day : 0;
-        //1.互斥规则
-        for (var r in schedules) {
-          if (
-            index > 0 &&
-            realPlan.value[person][`${lastday}`] == r.last &&
-            radomValue == r.now
-          ) {
-            autoSchedule(day, person, index);
-            return;
+        var lastday = days.value[index - 1]
+          ? days.value[index - 1].fullDate
+          : null;
+        //1.互斥重排
+        if (lastday) {
+          for (var r in schedules) {
+            if (
+              index > 0 &&
+              realPlan.value[person][`${lastday}`] == r.last &&
+              radomValue == r.now
+            ) {
+              autoSchedule(day, person, index);
+              return;
+            }
           }
         }
 
-        //3.不连续上班天数规则
+        //2.不连续上班天数规则
         //比如上6休1，那么就是每7天中，必须有一天休息
-
         const startIndex = loopIndex * (maxConsecutiveDays + 1) + 1;
         const endIndex = startIndex + sortIndex - 1;
-
         console.log(`${day}在${loopIndex}周期中的位置:${sortIndex}`);
-
         if (sortIndex > 1) {
           console.log(`需要关注的区间是:${startIndex}~${endIndex - 1}`);
-
           let start = startIndex;
           let hasVacation = false;
           while (start <= endIndex - 1) {
@@ -447,7 +447,6 @@ const autoSchedule = (day, person, index) => {
             }
             start++;
           }
-
           if (sortIndex === maxConsecutiveDays + 1 && !hasVacation) {
             console.log(
               `${day} 在一个周期的最后一天，并且区间内没有休息日，强制安排休息`
@@ -463,9 +462,9 @@ const autoSchedule = (day, person, index) => {
         }
     }
 
+    //3.随机排班
     realPlan.value[person][`${day}`] = radomValue;
     realPlan.value[person][`${day}Type`] = "随机";
-
     generateLogs.value.push(
       `(${index}):${day},第${loopIndex}周期第${sortIndex}天，${person}无个人计划，随机排班:${radomValue}`
     );
