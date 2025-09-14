@@ -1,5 +1,6 @@
 <template>
   <div class="calendar-container">
+    <!-- 头部操作按钮 -->
     <div class="calendar-header">
       <div class="left-operations">
         <el-button color="#009090" circle round @click="handleExport">
@@ -14,15 +15,6 @@
         >
           <i class="iconfont icon-debug"></i>
         </el-button>
-
-        <!-- <el-switch
-          v-model="debugmode"
-          class="ml-2"
-          inline-prompt
-          style="--el-switch-on-color: #13ce66"
-          active-text="开启排班跟踪"
-          inactive-text="关闭排班跟踪"
-        /> -->
       </div>
 
       <div class="center">
@@ -54,6 +46,8 @@
         </el-button>
       </div>
     </div>
+
+    <!-- 主体内容表格 -->
     <div class="calendar-table-container">
       <el-table
         :data="tableData"
@@ -172,7 +166,7 @@
       center
       align-center
     >
-      <Config ref="configRef" />
+      <ConfigDialog ref="configRef" />
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="closeConfig">关闭</el-button>
@@ -180,51 +174,14 @@
       </template>
     </el-dialog>
 
+    <!-- 导出预览对话框 -->
     <el-dialog title="导出预览" width="60%" v-model="exportPreviewVisible">
-      <el-table :data="tableData" border style="width: 100%" id="previewTable">
-        <el-table-column
-          prop="name"
-          label="姓名"
-          width="150"
-          fixed
-          align="center"
-        >
-          <template #header>
-            <div class="date-header">姓名</div>
-          </template>
-          <template #default="scope">
-            <div class="cell-content">
-              <b class="user-name">{{ scope.row.name }}</b>
-            </div>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          prop="date"
-          :label="day.weekdayIndex + ''"
-          :weekIndex="day.weekdayIndex"
-          width="160"
-          v-for="day in days"
-          :key="day.day"
-        >
-          <template #header>
-            <div :class="['date-header']">
-              <span class="day-number"
-                >{{ day.fullDate }}({{ day.weekday }})</span
-              >
-            </div>
-          </template>
-          <template #default="scope">
-            <div :class="['cell-content']">
-              <div class="cell-rule">
-                <b>{{
-                  renderworkType(realPlan[scope.row.name][`${day.fullDate}`])
-                }}</b>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+      <ExportDialog
+        :tableData="tableData"
+        :days="days"
+        :realPlan="realPlan"
+        id="previewTable"
+      />
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="exportPreviewVisible = false">关闭</el-button>
@@ -235,12 +192,7 @@
 
     <!-- 版本信息对话框 -->
     <el-dialog v-model="versionDialogVisible" width="30%" center align-center>
-      <h2 style="text-align: center">当前版本</h2>
-
-      <div style="text-align: left">
-        <p>版本号：{{ version }}</p>
-        <p>构建时间：{{ time }}</p>
-      </div>
+      <VersionDialog :version="version" :time="time" />
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="versionDialogVisible = false">关闭</el-button>
@@ -248,6 +200,7 @@
       </template>
     </el-dialog>
 
+    <!-- 排班跟踪抽屉 -->
     <el-drawer
       class="debug-drawer"
       modal-class="debug-drawer-modal"
@@ -274,23 +227,38 @@ import random from "randomize";
 import User from "../service/users";
 import Schedule from "../service/schedules";
 import Rule from "../service/rules";
-import Config from "./Config.vue";
 import ContributionGraph from "../components/ContributionGraph.vue";
 import exportToExcel from "../service/exportToExcel";
 import Util from "../service/utils";
 import { version, time } from "../service/version";
 
+import ConfigDialog from "./components/config.vue";
+import VersionDialog from "./components/version.vue";
+import ExportDialog from "./components/export.vue";
+
 const settingsVisible = ref(false);
 const exportPreviewVisible = ref(false);
-const showConfig = ref(false);
 const versionDialogVisible = ref(false);
-// const version = ref("1.0.1");
+const dateRange = ref("");
+const configRef = ref(null);
+
+// 设置为中文
+dayjs.locale("zh-cn");
+
+const workTypes = ref([]);
+const tableData = ref([]);
+const debugmode = ref(false); //排班跟踪模式
+
+// 存储计划数据
+const planData = ref({});
+const realPlan = ref({});
+const generateLogs = ref([]);
+const days = ref([]);
+
+const people = computed(() => tableData.value.map((item) => item.name));
 
 const showSettings = async () => {
-  console.log("显示设置");
-  showConfig.value = true;
   settingsVisible.value = true;
-
   await nextTick();
   configRef.value.initdata();
 };
@@ -298,30 +266,6 @@ const showSettings = async () => {
 const handleVersion = () => {
   versionDialogVisible.value = true;
 };
-const dateRange = ref("");
-
-const configRef = ref(null);
-
-// 设置为中文
-dayjs.locale("zh-cn");
-// 当前年份和月份
-const currentYear = ref(dayjs().year());
-const currentMonth = ref(dayjs().month() + 1);
-
-const workTypes = ref(Schedule.getSchedules());
-const tableData = ref([]);
-
-const debugmode = ref(false); //排班跟踪模式
-
-// 存储计划数据
-const planData = ref({});
-const realPlan = ref({});
-
-const generateLogs = ref([]);
-
-const people = computed(() => tableData.value.map((item) => item.name));
-
-const eleIdPrefix = ref("prefix"); // 循环Dmo绑定的ID前缀
 
 const handleExport = () => {
   if (days.value.length === 0) {
@@ -391,8 +335,6 @@ const renderworkTypeColor = (value) => {
   return type ? type.color : "";
 };
 
-const days = ref([]);
-
 const handleDateChange = async (value) => {
   const loadingInstance = ElLoading.service();
 
@@ -451,21 +393,13 @@ const autoSchedule = (day, person, index) => {
   sortIndex = sortIndex === 0 ? maxConsecutiveDays + 1 : sortIndex;
   const loopIndex = Math.floor(index / (maxConsecutiveDays + 1));
 
-  // generateLogs.value.push(
-  //   `maxConsecutiveDays + 1=${maxConsecutiveDays + 1}
-  //   sortIndex=${(index + 1) % (maxConsecutiveDays + 1)}
-  //   loopIndex=${Math.floor(index / (maxConsecutiveDays + 1))}`
-  // );
   // 如果有个人计划，设置为"个人计划"
   if (planData.value[person][day]) {
     realPlan.value[person][`${day}`] = planData.value[person][day];
     realPlan.value[person][`${day}Type`] = "预计划";
-
     generateLogs.value.push(
       `${day},第${loopIndex}周期第${sortIndex}天，${person}有个人计划，按计划排班:${planData.value[person][day]}`
     );
-
-    console.log("有个人计划，按计划排班", person, planData.value[person][day]);
     return;
   } else {
     const radomValue = random(workTypes.value.map((type) => type.value));
@@ -538,33 +472,12 @@ const autoSchedule = (day, person, index) => {
   }
 };
 
-const previousMonth = () => {
-  const date = dayjs(`${currentYear.value}-${currentMonth.value}-01`).subtract(
-    1,
-    "month"
-  );
-  currentYear.value = date.year();
-  currentMonth.value = date.month() + 1;
-  initAll();
-};
-
-const nextMonth = () => {
-  const date = dayjs(`${currentYear.value}-${currentMonth.value}-01`).add(
-    1,
-    "month"
-  );
-  currentYear.value = date.year();
-  currentMonth.value = date.month() + 1;
-  initAll();
-};
-
 const ruleChange = (value) => {
   console.log("Selected plan:", planData.value);
 };
 
 const closeConfig = () => {
   settingsVisible.value = false;
-  showConfig.value = false;
   initAll();
 };
 
