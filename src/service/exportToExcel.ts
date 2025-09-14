@@ -1,8 +1,9 @@
-import FileSaver from "file-saver";
+// import FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import { nextTick } from "vue";
 import { save } from "@tauri-apps/plugin-dialog";
-import { writeFile, BaseDirectory } from "@tauri-apps/plugin-fs";
+import { writeFile } from "@tauri-apps/plugin-fs";
+import { ElMessage } from "element-plus";
 
 // when using `"withGlobalTauri": true`, you may use
 // const { save } = window.__TAURI__.dialog;
@@ -13,8 +14,7 @@ export interface IExportXlsx {
 }
 
 const exportToExcel = async (
-  element: string | Array<IExportXlsx>,
-  name?: string
+  element: string | Array<IExportXlsx>
 ): Promise<Object> => {
   await nextTick();
   // 设置导出的内容是否只做解析，不进行格式转换 false：要解析， true:不解析
@@ -63,6 +63,10 @@ const exportToExcel = async (
     });
     if (path) {
       await writeFile(path, wbout, {});
+      ElMessage({
+        message: "排班表导出成功！",
+        type: "success",
+      });
     }
   } catch (e) {
     console.log("error", e);

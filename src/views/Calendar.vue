@@ -276,7 +276,7 @@ const handleExport = async () => {
   await exportRef.value.formatData();
 };
 const exportExcel = async () => {
-  await exportToExcel("previewTable", "排班计划");
+  await exportToExcel("previewTable");
   exportPreviewVisible.value = false;
 };
 
