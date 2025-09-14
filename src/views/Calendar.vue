@@ -192,16 +192,6 @@
       </template>
     </el-dialog>
 
-    <!-- 版本信息对话框 -->
-    <el-dialog v-model="versionDialogVisible" width="30%" center align-center>
-      <VersionDialog :version="version" :time="time" />
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="versionDialogVisible = false">关闭</el-button>
-        </span>
-      </template>
-    </el-dialog>
-
     <!-- 排班跟踪抽屉 -->
     <el-drawer
       class="debug-drawer"
@@ -239,7 +229,6 @@ import Util from "../service/utils";
 import { version, time } from "../service/version";
 
 import ConfigDialog from "./components/config.vue";
-import VersionDialog from "./components/version.vue";
 import ExportDialog from "./components/export.vue";
 
 const settingsVisible = ref(false);

@@ -53,7 +53,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { nextTick, ref } from "vue";
 import Schedule from "../../service/schedules";
 
@@ -76,7 +76,7 @@ const workTypes = ref([]);
 
 const showResult = ref(false);
 
-const renderworkType = (value: any) => {
+const renderworkType = (value) => {
   const type = workTypes.value.find((type) => type.value === value);
   console.log("type", type);
 

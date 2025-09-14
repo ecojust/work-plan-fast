@@ -163,20 +163,17 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import User from "../../service/users";
 import Schedule from "../../service/schedules";
 import Rule from "../../service/rules";
-import type { IUser } from "../../service/interface";
-import type { ISchedule } from "../../service/interface";
-import type { INolinkRule } from "../../service/interface";
 
 const activeTab = ref("users");
-const users = ref<IUser[]>([]);
-const schedules = ref<ISchedule[]>([]);
-const noLinkRules = ref<INolinkRule[]>([]);
+const users = ref([]);
+const schedules = ref([]);
+const noLinkRules = ref([]);
 
 let workRestConfig = ref({ workDays: 0, restDays: 0 }); //上班休息配置
 
@@ -188,7 +185,7 @@ const addUser = () => {
   });
 };
 
-const removeUser = (index: number) => {
+const removeUser = (index) => {
   users.value.splice(index, 1);
 };
 
@@ -201,7 +198,7 @@ const addSchedule = () => {
   });
 };
 
-const removeSchedule = (index: number) => {
+const removeSchedule = (index) => {
   schedules.value.splice(index, 1);
 };
 
@@ -213,7 +210,7 @@ const addNoLinkRule = () => {
   });
 };
 
-const removeNoLinkRule = (index: number) => {
+const removeNoLinkRule = (index) => {
   noLinkRules.value.splice(index, 1);
 };
 
@@ -240,21 +237,6 @@ defineExpose({
   initdata,
   closeConfig,
 });
-
-// onActivated(async () => {
-//   console.log("Config activated");
-//   await initdata();
-// });
-
-// onDeactivated(async () => {
-//   console.log("Config deactivated");
-//   await initdata();
-// });
-
-// onMounted(async () => {
-//   console.log("Config mounted");
-//   await initdata();
-// });
 </script>
 
 <style lang="less" scoped>
