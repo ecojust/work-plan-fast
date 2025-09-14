@@ -30,7 +30,7 @@
           </el-table>
           <div class="actions">
             <el-button type="primary" @click="addUser">添加人员</el-button>
-            <el-button type="success" @click="saveUsers">保存</el-button>
+            <!-- <el-button type="success" @click="saveUsers">保存</el-button> -->
           </div>
         </div>
       </el-tab-pane>
@@ -76,7 +76,7 @@
           </el-table>
           <div class="actions">
             <el-button type="primary" @click="addSchedule">添加班次</el-button>
-            <el-button type="success" @click="saveSchedules">保存</el-button>
+            <!-- <el-button type="success" @click="saveSchedules">保存</el-button> -->
           </div>
         </div>
       </el-tab-pane>
@@ -84,32 +84,37 @@
       <el-tab-pane label="规则设置" name="rules">
         <div class="rules-config">
           <div class="rule-section">
-            <h3>连续工作规则</h3>
-            <el-form :model="ruleForm" label-width="150px">
-              <el-form-item
-                :label="'上 ' + ruleForm.maxConsecutiveDays + ' 休1'"
-              >
-                <el-input-number
-                  v-model="ruleForm.maxConsecutiveDays"
-                  :min="1"
-                  :max="14"
-                />
-              </el-form-item>
-              <!-- <el-form-item label="月休息天数" label-width="150px">
-                <el-input-number
-                  v-model="ruleForm.restDays"
-                  :min="1"
-                  :max="20"
-                />
-              </el-form-item> -->
+            <h3>上班/休息 规则</h3>
+            <el-form :model="workRestConfig" label-width="40px">
+              <el-row>
+                <el-col span="12">
+                  <el-form-item label="上">
+                    <el-input-number
+                      v-model="workRestConfig.workDays"
+                      :min="1"
+                      :max="14"
+                    />
+                  </el-form-item>
+                </el-col>
+
+                <el-col span="12">
+                  <el-form-item label="休">
+                    <el-input-number
+                      v-model="workRestConfig.restDays"
+                      :min="1"
+                      :max="14"
+                    />
+                  </el-form-item>
+                </el-col>
+              </el-row>
             </el-form>
           </div>
 
           <div class="rule-section">
-            <h3>相邻班次限制</h3>
+            <h3>相邻班次 互斥规则</h3>
             <el-table
               :data="noLinkRules"
-              height="180"
+              height="185"
               border
               style="width: 100%"
             >
@@ -125,7 +130,7 @@
                   </el-select>
                 </template>
               </el-table-column>
-              <el-table-column label="本次班次不能为">
+              <el-table-column label="本次排班不能为">
                 <template #default="{ row }">
                   <el-select v-model="row.now" placeholder="选择班次">
                     <el-option
@@ -149,7 +154,7 @@
               <el-button type="primary" @click="addNoLinkRule"
                 >添加规则</el-button
               >
-              <el-button type="success" @click="saveRules">保存</el-button>
+              <!-- <el-button type="success" @click="saveRules">保存</el-button> -->
             </div>
           </div>
         </div>
@@ -166,17 +171,14 @@ import Schedule from "../../service/schedules";
 import Rule from "../../service/rules";
 import type { IUser } from "../../service/interface";
 import type { ISchedule } from "../../service/interface";
-
 import type { INolinkRule } from "../../service/interface";
 
 const activeTab = ref("users");
 const users = ref<IUser[]>([]);
 const schedules = ref<ISchedule[]>([]);
 const noLinkRules = ref<INolinkRule[]>([]);
-const ruleForm = ref({
-  maxConsecutiveDays: 0,
-  restDays: 0,
-});
+
+let workRestConfig = ref({ workDays: 0, restDays: 0 }); //上班休息配置
 
 // Users
 const addUser = () => {
@@ -188,14 +190,6 @@ const addUser = () => {
 
 const removeUser = (index: number) => {
   users.value.splice(index, 1);
-};
-
-const saveUsers = async () => {
-  await User.setUsers(users.value);
-  ElMessage({
-    message: "保存成功",
-    type: "success",
-  });
 };
 
 // Schedules
@@ -211,14 +205,6 @@ const removeSchedule = (index: number) => {
   schedules.value.splice(index, 1);
 };
 
-const saveSchedules = async () => {
-  await Schedule.setSchedules(schedules.value);
-  ElMessage({
-    message: "保存成功",
-    type: "success",
-  });
-};
-
 // Rules
 const addNoLinkRule = () => {
   noLinkRules.value.push({
@@ -231,29 +217,28 @@ const removeNoLinkRule = (index: number) => {
   noLinkRules.value.splice(index, 1);
 };
 
-const saveRules = async () => {
-  // TODO: Implement rule saving logic
+const initdata = async () => {
+  users.value = await User.getUsers();
+  schedules.value = await Schedule.getSchedules();
+  noLinkRules.value = await Rule.getNoLink();
+  workRestConfig.value = await Rule.getWorkRestConfig();
+};
+
+const closeConfig = async () => {
+  await User.setUsers(users.value);
+  await Schedule.setSchedules(schedules.value);
   await Rule.setNoLink(noLinkRules.value);
-  // await Rule.setRest(ruleForm.value.restDays);
-  await Rule.setMaxConsecutiveDays(ruleForm.value.maxConsecutiveDays);
+  await Rule.setWorkRestConfig(workRestConfig.value);
+
   ElMessage({
     message: "保存成功",
     type: "success",
   });
 };
 
-const initdata = async () => {
-  users.value = await User.getUsers();
-  schedules.value = await Schedule.getSchedules();
-  noLinkRules.value = await Rule.getNoLink();
-  ruleForm.value = {
-    maxConsecutiveDays: await Rule.getMaxConsecutiveDays(),
-    restDays: await Rule.getRest(),
-  };
-};
-
 defineExpose({
   initdata,
+  closeConfig,
 });
 
 // onActivated(async () => {
@@ -274,8 +259,6 @@ defineExpose({
 
 <style lang="less" scoped>
 .config-container {
-  padding: 20px;
-
   .actions {
     margin-top: 20px;
     display: flex;
@@ -284,10 +267,10 @@ defineExpose({
   }
 
   .rule-section {
-    margin-bottom: 30px;
+    margin-bottom: 4px;
 
     h3 {
-      margin-bottom: 20px;
+      margin-bottom: 4px;
       font-size: 16px;
       font-weight: 500;
     }

@@ -1,6 +1,12 @@
 <template>
   <div class="export-container">
-    <el-table :data="tableData" border style="width: 100%" id="previewTable">
+    <el-table
+      :data="tableData"
+      v-if="showResult"
+      border
+      style="width: 100%"
+      id="previewTable"
+    >
       <el-table-column
         prop="name"
         label="姓名"
@@ -48,7 +54,8 @@
 </template>
 
 <script setup lang="ts">
-import {} from "vue";
+import { nextTick, ref } from "vue";
+import Schedule from "../../service/schedules";
 
 const props = defineProps({
   tableData: {
@@ -63,6 +70,32 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+});
+
+const workTypes = ref([]);
+
+const showResult = ref(false);
+
+const renderworkType = async (value: any) => {
+  const type = workTypes.value.find((type) => type.value === value);
+  console.log("type", type);
+
+  return type ? type.label : "请排班";
+};
+
+const formatData = async () => {
+  showResult.value = false;
+
+  workTypes.value = await Schedule.getSchedules();
+  await nextTick();
+
+  setTimeout(() => {
+    showResult.value = true;
+  }, 2000);
+};
+
+defineExpose({
+  formatData,
 });
 </script>
 

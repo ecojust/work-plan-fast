@@ -1,5 +1,15 @@
 import File from "./file";
 
+export interface WorkRestConfig {
+  workDays: number; // 连续工作天数 m
+  restDays: number; // 休息天数 n
+}
+
+export const DEFAULT_WORK_REST_CONFIG: WorkRestConfig = {
+  workDays: 5,
+  restDays: 2,
+};
+
 export default class Rule {
   //不相连班次
   static async getNoLink() {
@@ -67,6 +77,33 @@ export default class Rule {
       return;
     }
     const result = await File._writeFile("./continus.txt", day.toString());
+    return result;
+  }
+
+  //工作休息配置
+  static async getWorkRestConfig(): Promise<WorkRestConfig> {
+    //@ts-ignore
+    if (process.env.NODE_ENV === "development") {
+      return DEFAULT_WORK_REST_CONFIG;
+    }
+    const content = await File._readFile(
+      "./work-rest-config.json",
+      JSON.stringify(DEFAULT_WORK_REST_CONFIG)
+    );
+    return JSON.parse(
+      content?.data || JSON.stringify(DEFAULT_WORK_REST_CONFIG)
+    );
+  }
+
+  static async setWorkRestConfig(config: WorkRestConfig) {
+    //@ts-ignore
+    if (process.env.NODE_ENV === "development") {
+      return;
+    }
+    const result = await File._writeFile(
+      "./work-rest-config.json",
+      JSON.stringify(config, null, 2)
+    );
     return result;
   }
 }

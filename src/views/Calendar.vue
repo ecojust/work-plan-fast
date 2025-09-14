@@ -169,7 +169,7 @@
       <ConfigDialog ref="configRef" />
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="closeConfig">关闭</el-button>
+          <el-button @click="closeConfig">确认</el-button>
         </span>
       </template>
     </el-dialog>
@@ -180,7 +180,7 @@
         :tableData="tableData"
         :days="days"
         :realPlan="realPlan"
-        id="previewTable"
+        ref="exportRef"
       />
       <template #footer>
         <span class="dialog-footer">
@@ -241,6 +241,7 @@ const exportPreviewVisible = ref(false);
 const versionDialogVisible = ref(false);
 const dateRange = ref("");
 const configRef = ref(null);
+const exportRef = ref(null);
 
 // 设置为中文
 dayjs.locale("zh-cn");
@@ -267,7 +268,7 @@ const handleVersion = () => {
   versionDialogVisible.value = true;
 };
 
-const handleExport = () => {
+const handleExport = async () => {
   if (days.value.length === 0) {
     ElMessage({
       message: "请先选择日期并排班",
@@ -276,6 +277,9 @@ const handleExport = () => {
     return;
   }
   exportPreviewVisible.value = true;
+  await nextTick();
+
+  await exportRef.value.formatData();
 };
 const exportExcel = async () => {
   await exportToExcel("previewTable", "排班计划");
@@ -361,7 +365,7 @@ const handleDateChange = async (value) => {
 };
 
 let schedules = []; //班次计划
-let maxConsecutiveDays = 0; //不连续上班天数,上5休1
+let workRestConfig = { workDays: 0, restDays: 0 }; //上班休息配置
 const startScheduling = async () => {
   if (days.value.length === 0) {
     ElMessage({
@@ -375,10 +379,12 @@ const startScheduling = async () => {
 
   await nextTick();
   resetPlans();
-  maxConsecutiveDays = await Rule.getMaxConsecutiveDays();
+  workRestConfig = await Rule.getWorkRestConfig();
   schedules = await Schedule.getSchedules();
 
-  generateLogs.value.push(`排班规则：上${maxConsecutiveDays}休1,`);
+  generateLogs.value.push(
+    `排班规则：上${workRestConfig.workDays}休${workRestConfig.restDays},`
+  );
 
   people.value.forEach((person) => {
     days.value.forEach((day, index) => {
@@ -389,9 +395,10 @@ const startScheduling = async () => {
 };
 
 const autoSchedule = (day, person, index) => {
-  let sortIndex = (index + 1) % (maxConsecutiveDays + 1);
-  sortIndex = sortIndex === 0 ? maxConsecutiveDays + 1 : sortIndex;
-  const loopIndex = Math.floor(index / (maxConsecutiveDays + 1));
+  const cycleLength = workRestConfig.workDays + workRestConfig.restDays;
+  let sortIndex = (index + 1) % cycleLength;
+  sortIndex = sortIndex === 0 ? cycleLength : sortIndex;
+  const loopIndex = Math.floor(index / cycleLength);
 
   // 如果有个人计划，设置为"个人计划"
   if (planData.value[person][day]) {
@@ -404,62 +411,73 @@ const autoSchedule = (day, person, index) => {
   } else {
     const radomValue = random(workTypes.value.map((type) => type.value));
 
-    switch (day) {
-      default:
-        var lastday = days.value[index - 1]
-          ? days.value[index - 1].fullDate
-          : null;
-        //1.互斥重排
-        if (lastday) {
-          for (var r in schedules) {
-            if (
-              index > 0 &&
-              realPlan.value[person][`${lastday}`] == r.last &&
-              radomValue == r.now
-            ) {
-              autoSchedule(day, person, index);
-              return;
-            }
-          }
+    var lastday = days.value[index - 1] ? days.value[index - 1].fullDate : null;
+    //1.互斥重排
+    if (lastday) {
+      for (var r in schedules) {
+        if (
+          index > 0 &&
+          realPlan.value[person][`${lastday}`] == r.last &&
+          radomValue == r.now
+        ) {
+          autoSchedule(day, person, index);
+          return;
         }
+      }
+    }
 
-        //2.不连续上班天数规则
-        //比如上6休1，那么就是每7天中，必须有一天休息
-        const startIndex = loopIndex * (maxConsecutiveDays + 1) + 1;
-        const endIndex = startIndex + sortIndex - 1;
-        console.log(`${day}在${loopIndex}周期中的位置:${sortIndex}`);
-        if (sortIndex > 1) {
-          console.log(`需要关注的区间是:${startIndex}~${endIndex - 1}`);
-          let start = startIndex;
-          let hasVacation = false;
-          while (start <= endIndex - 1) {
-            const key = days.value[start - 1].fullDate;
-            if (realPlan.value[person][key] === "vacation") {
-              hasVacation = true;
-              if (radomValue === "vacation") {
-                console.log(
-                  "区间内已经有假期,并且当前又排到假期，重新排:",
-                  key
-                );
-                autoSchedule(day, person, index);
-                return;
-              }
-            }
-            start++;
-          }
-          if (sortIndex === maxConsecutiveDays + 1 && !hasVacation) {
-            console.log(
-              `${day} 在一个周期的最后一天，并且区间内没有休息日，强制安排休息`
-            );
-            realPlan.value[person][`${day}`] = "vacation";
-            realPlan.value[person][`${day}Type`] = "强制";
+    //2.不连续上班天数规则 - 上m休n
+    //在每个周期（m+n天）中，必须有n天休息
+    const startIndex = loopIndex * cycleLength + 1;
+    const endIndex = startIndex + sortIndex - 1;
+    console.log(`${day}在${loopIndex}周期中的位置:${sortIndex}`);
 
-            generateLogs.value.push(
-              `(${index}):${day},第${loopIndex}周期第${sortIndex}天，${person}在一个周期的最后一天，并且区间内没有休息日，强制安排休息`
-            );
-            return;
-          }
+    // 统计当前周期内已经安排的休息天数
+    let restCount = 0;
+    let start = startIndex;
+    while (start <= endIndex - 1) {
+      if (start - 1 >= 0 && start - 1 < days.value.length) {
+        const key = days.value[start - 1].fullDate;
+        if (realPlan.value[person][key] === "vacation") {
+          restCount++;
         }
+      }
+      start++;
+    }
+
+    // 计算在当前周期还需要多少个休息日
+    const remainingDays = cycleLength - sortIndex + 1; // 当前周期还剩下多少天（包括今天）
+    const neededRest = workRestConfig.restDays - restCount; // 还需要多少个休息日
+
+    // 如果剩余天数等于还需要的休息日数，则后面的天数都必须安排休息
+    if (remainingDays === neededRest) {
+      console.log(
+        `${day} 在当前周期中还需要${neededRest}天休息，剩余天数刚好是${remainingDays}天，强制安排休息`
+      );
+      realPlan.value[person][`${day}`] = "vacation";
+      realPlan.value[person][`${day}Type`] = "强制";
+      generateLogs.value.push(
+        `(${index}):${day},第${loopIndex}周期第${sortIndex}天，${person}强制休息，因为周期内还需要${neededRest}天休息`
+      );
+      return;
+    }
+
+    // 如果已经达到了这个周期的最大工作天数，也要强制休息
+    if (sortIndex - restCount > workRestConfig.workDays) {
+      console.log(`${day} 在当前周期中已达到最大工作天数，强制安排休息`);
+      realPlan.value[person][`${day}`] = "vacation";
+      realPlan.value[person][`${day}Type`] = "强制";
+      generateLogs.value.push(
+        `(${index}):${day},第${loopIndex}周期第${sortIndex}天，${person}强制休息，因为已达到最大工作天数`
+      );
+      return;
+    }
+
+    // 如果随机到了休息，但是休息已经足够了，重新排班
+    if (radomValue === "vacation" && restCount >= workRestConfig.restDays) {
+      console.log(`随机到休息，但是休息已经足够了，重新排班`);
+      autoSchedule(day, person, index);
+      return;
     }
 
     //3.随机排班
@@ -475,7 +493,9 @@ const ruleChange = (value) => {
   console.log("Selected plan:", planData.value);
 };
 
-const closeConfig = () => {
+const closeConfig = async () => {
+  configRef.value.closeConfig();
+  await nextTick();
   settingsVisible.value = false;
   initAll();
 };
