@@ -424,7 +424,7 @@ const autoSchedule = (day, person, index) => {
     //在每个周期（m+n天）中，必须有n天休息
     const startIndex = loopIndex * cycleLength + 1;
     const endIndex = startIndex + sortIndex - 1;
-    console.log(`${day}在${loopIndex}周期中的位置:${sortIndex}`);
+    // console.log(`${day}在${loopIndex}周期中的位置:${sortIndex}`);
 
     // 统计当前周期内已经安排的休息天数
     let restCount = 0;
@@ -445,9 +445,9 @@ const autoSchedule = (day, person, index) => {
 
     // 如果剩余天数等于还需要的休息日数，则后面的天数都必须安排休息
     if (remainingDays === neededRest) {
-      console.log(
-        `${day} 在当前周期中还需要${neededRest}天休息，剩余天数刚好是${remainingDays}天，强制安排休息`
-      );
+      // console.log(
+      //   `${day} 在当前周期中还需要${neededRest}天休息，剩余天数刚好是${remainingDays}天，强制安排休息`
+      // );
       realPlan.value[person][`${day}`] = "vacation";
       realPlan.value[person][`${day}Type`] = "强制";
       generateLogs.value.push(
@@ -458,7 +458,7 @@ const autoSchedule = (day, person, index) => {
 
     // 如果已经达到了这个周期的最大工作天数，也要强制休息
     if (sortIndex - restCount > workRestConfig.workDays) {
-      console.log(`${day} 在当前周期中已达到最大工作天数，强制安排休息`);
+      // console.log(`${day} 在当前周期中已达到最大工作天数，强制安排休息`);
       realPlan.value[person][`${day}`] = "vacation";
       realPlan.value[person][`${day}Type`] = "强制";
       generateLogs.value.push(
@@ -469,7 +469,7 @@ const autoSchedule = (day, person, index) => {
 
     // 如果随机到了休息，但是休息已经足够了，重新排班
     if (radomValue === "vacation" && restCount >= workRestConfig.restDays) {
-      console.log(`随机到休息，但是休息已经足够了，重新排班`);
+      // console.log(`随机到休息，但是休息已经足够了，重新排班`);
       autoSchedule(day, person, index);
       return;
     }

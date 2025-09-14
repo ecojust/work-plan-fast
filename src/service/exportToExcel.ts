@@ -1,6 +1,11 @@
 import FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import { nextTick } from "vue";
+import { save } from "@tauri-apps/plugin-dialog";
+import { writeFile, BaseDirectory } from "@tauri-apps/plugin-fs";
+
+// when using `"withGlobalTauri": true`, you may use
+// const { save } = window.__TAURI__.dialog;
 
 export interface IExportXlsx {
   eleById: string;
@@ -13,7 +18,7 @@ const exportToExcel = async (
 ): Promise<Object> => {
   await nextTick();
   // 设置导出的内容是否只做解析，不进行格式转换 false：要解析， true:不解析
-  const xlsxParam = { raw: true };
+  const xlsxParam = { raw: false };
   let wb: XLSX.WorkBook;
   if (typeof element === "string") {
     // 导出单个表格
@@ -33,25 +38,36 @@ const exportToExcel = async (
     );
   }
 
-  // 导出excel文件名
-  const fileName: string = `${name || new Date().getTime()}.xlsx`;
-
+  // 下载保存文件
+  // FileSaver.saveAs(
+  //   new Blob([wbout], {
+  //     type: "application/octet-stream",
+  //   }),
+  //   fileName
+  // );
   const wbout = XLSX.write(wb, {
     bookType: "xlsx",
     bookSST: true,
-    type: "array",
+    type: "buffer",
   });
   try {
-    // 下载保存文件
-    FileSaver.saveAs(
-      new Blob([wbout], {
-        type: "application/octet-stream",
-      }),
-      fileName
-    );
+    //1.系统弹窗导出到文件夹，二进制文件
+
+    const path = await save({
+      filters: [
+        {
+          name: "My Filter",
+          extensions: ["xlsx"],
+        },
+      ],
+    });
+    if (path) {
+      await writeFile(path, wbout, {});
+    }
   } catch (e) {
-    console.log(e, wbout);
+    console.log("error", e);
   }
+
   return wbout;
 };
 export default exportToExcel;

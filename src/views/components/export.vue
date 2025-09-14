@@ -78,8 +78,6 @@ const showResult = ref(false);
 
 const renderworkType = (value) => {
   const type = workTypes.value.find((type) => type.value === value);
-  console.log("type", type);
-
   return type ? type.label : "请排班";
 };
 
